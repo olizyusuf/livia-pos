@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../helper/display_helper.dart';
+
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     String titleApp = "Livia POS";
+
+    DisplayHelper displayHelper = DisplayHelper();
 
     return Scaffold(
       appBar: AppBar(
@@ -21,8 +25,12 @@ class MainScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Text("main screen"),
+      body: Container(
+        height: displayHelper.heightDp(context),
+        width: displayHelper.widthDp(context),
+        child: Center(
+          child: Text("main screen"),
+        ),
       ),
       drawer: Drawer(
         child: ListView(
