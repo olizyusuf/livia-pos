@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/screen/add_user_screen.dart';
 import 'package:liviapos/screen/main_screen.dart';
+import 'package:liviapos/screen/role_screen.dart';
 import 'package:liviapos/screen/user_screen.dart';
 
 void main() {
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/main': (context) => const MainScreen(),
         '/users': (context) => const UserScreen(),
+        '/add_user': (context) => const AddUserScreen(),
+        '/roles': (context) => const RoleScreen(),
       },
     );
   }

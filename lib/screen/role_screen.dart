@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:liviapos/helper/display_helper.dart';
 
-class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
+import '../helper/display_helper.dart';
+
+class RoleScreen extends StatelessWidget {
+  const RoleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    String title = "Users";
+    String title = "Roles";
 
     DisplayHelper displayHelper = DisplayHelper();
 
@@ -31,12 +32,6 @@ class UserScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushNamed(context, '/roles');
                       },
-                      child: const Text("Role"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/add_user');
-                      },
                       child: const Row(
                         children: [
                           Icon(Icons.add),
@@ -54,11 +49,10 @@ class UserScreen extends StatelessWidget {
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text("index ${index.toString()}"),
-                    subtitle: Text("Administrator"),
+                    title: Text("Administrator ${index.toString()}"),
                     trailing: IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.edit_square),
+                      icon: const Icon(Icons.edit_square),
                     ),
                     tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],
                   );
