@@ -11,9 +11,6 @@ class AddRoleScreen extends StatelessWidget {
 
     DisplayHelper displayHelper = DisplayHelper();
 
-    List<String> roles = ['Administrator', 'Kasir', 'Manager'];
-    String defaultRole = 'Administrator';
-
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -38,7 +35,7 @@ class AddRoleScreen extends StatelessWidget {
                   labelText: 'Nama Role',
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Checkbox(
