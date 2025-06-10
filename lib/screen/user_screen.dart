@@ -48,8 +48,7 @@ class UserScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: displayHelper.heightDp(context) * 0.88,
+            Expanded(
               child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {

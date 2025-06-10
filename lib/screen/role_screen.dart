@@ -30,7 +30,7 @@ class RoleScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/roles');
+                        Navigator.pushNamed(context, '/add_role');
                       },
                       child: const Row(
                         children: [
@@ -43,8 +43,7 @@ class RoleScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: displayHelper.heightDp(context) * 0.88,
+            Expanded(
               child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
