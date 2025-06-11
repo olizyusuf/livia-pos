@@ -45,7 +45,7 @@ class RoleScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text("Administrator ${index.toString()}"),

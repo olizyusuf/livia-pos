@@ -38,7 +38,7 @@ class MainScreen extends StatelessWidget {
             const SizedBox(
               height: 90,
               child: DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
+                  decoration: BoxDecoration(color: Colors.grey),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

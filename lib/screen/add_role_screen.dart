@@ -9,6 +9,17 @@ class AddRoleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String title = "Add Role";
 
+    List<String> menus = [
+      "Penjualan",
+      "Pembelian",
+      "Master",
+      "Laporan",
+      "Users",
+      "Printer",
+      "Database",
+      "Setting"
+    ];
+
     DisplayHelper displayHelper = DisplayHelper();
 
     return Scaffold(
@@ -38,11 +49,30 @@ class AddRoleScreen extends StatelessWidget {
               const SizedBox(
                 height: 15.0,
               ),
-              Checkbox(
-                activeColor: Colors.yellow,
-                checkColor: Colors.black,
-                value: true,
-                onChanged: (newValue) {},
+              Container(
+                color: Colors.grey[100],
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                height: displayHelper.heightDp(context) * 0.7,
+                child: ListView.builder(
+                  itemCount: menus.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: index % 2 == 0 ? Colors.grey[100] : Colors.white,
+                      child: ListTile(
+                        title: Text(menus[index]),
+                        trailing: Checkbox(
+                          activeColor: Colors.green,
+                          checkColor: Colors.white,
+                          value: index % 2 == 0 ? true : false,
+                          onChanged: (newValue) {},
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 10.0,
               ),
               ElevatedButton(
                 onPressed: () {},
