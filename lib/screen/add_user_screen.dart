@@ -7,7 +7,12 @@ class AddUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = "Add User";
+    final datauser = ModalRoute.of(context)?.settings.arguments;
+
+    debugPrint(datauser.toString());
+
+    String titleAdd = "Add User";
+    String titleEdit = "Edit User";
 
     DisplayHelper displayHelper = DisplayHelper();
 
@@ -16,7 +21,7 @@ class AddUserScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: datauser != null ? Text(titleEdit) : Text(titleAdd),
       ),
       body: Container(
         padding: const EdgeInsets.only(

@@ -56,7 +56,15 @@ class UserScreen extends StatelessWidget {
                     title: Text("index ${index.toString()}"),
                     subtitle: Text("Administrator"),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final datauser = {
+                          "username": "admin${index}",
+                          "password": "password",
+                        };
+
+                        Navigator.pushNamed(context, '/add_user',
+                            arguments: datauser);
+                      },
                       icon: Icon(Icons.edit_square),
                     ),
                     tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],
