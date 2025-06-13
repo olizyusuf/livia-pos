@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/model/user.dart';
+import 'package:liviapos/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
 
@@ -7,9 +10,8 @@ class AddUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final datauser = ModalRoute.of(context)?.settings.arguments;
-
-    debugPrint(datauser.toString());
+    final User? datauser = ModalRoute.of(context)?.settings.arguments as User?;
+    UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
 
     String titleAdd = "Add User";
     String titleEdit = "Edit User";
@@ -18,6 +20,12 @@ class AddUserScreen extends StatelessWidget {
 
     List<String> roles = ['Administrator', 'Kasir', 'Manager'];
     String defaultRole = 'Administrator';
+
+    if (datauser != null) {
+      userProv.initEditUser(datauser);
+    } else {
+      userProv.initAddUser();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +43,9 @@ class AddUserScreen extends StatelessWidget {
             children: [
               TextField(
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   hintText: 'Username',
-                  hintStyle: TextStyle(color: Colors.black26),
+                  hintStyle: const TextStyle(color: Colors.black26),
                   fillColor: Colors.grey[100],
                   filled: true,
                   labelText: 'Username',

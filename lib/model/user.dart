@@ -1,10 +1,10 @@
 class User {
   final int? id;
-  final String? username;
-  final String? password;
-  final String? role;
+  final String username;
+  final String password;
+  final String role;
 
-  User({this.id, this.username, this.password, this.role});
+  User({this.id,required this.username,required this.password,required this.role});
 
   Map<String, dynamic> toMap() {
     return {

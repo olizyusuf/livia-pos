@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/helper/display_helper.dart';
+import 'package:liviapos/model/user.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -57,10 +58,11 @@ class UserScreen extends StatelessWidget {
                     subtitle: Text("Administrator"),
                     trailing: IconButton(
                       onPressed: () {
-                        final datauser = {
-                          "username": "admin${index}",
-                          "password": "password",
-                        };
+                        final datauser = User(
+                            id: index,
+                            username: "admnin${index}",
+                            password: "default",
+                            role: "Administrator");
 
                         Navigator.pushNamed(context, '/add_user',
                             arguments: datauser);
