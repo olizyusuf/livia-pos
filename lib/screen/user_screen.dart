@@ -60,7 +60,7 @@ class UserScreen extends StatelessWidget {
                       onPressed: () {
                         final datauser = User(
                             id: index,
-                            username: "admnin${index}",
+                            username: "akun ${index}",
                             password: "default",
                             role: "Administrator");
 

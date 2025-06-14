@@ -38,9 +38,9 @@ class AddRoleScreen extends StatelessWidget {
             children: [
               TextField(
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   hintText: 'Nama Role',
-                  hintStyle: TextStyle(color: Colors.black26),
+                  hintStyle: const TextStyle(color: Colors.black26),
                   fillColor: Colors.grey[100],
                   filled: true,
                   labelText: 'Nama Role',

@@ -10,8 +10,14 @@ class AddUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User? datauser = ModalRoute.of(context)?.settings.arguments as User?;
     UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+    User? dataUser = ModalRoute.of(context)?.settings.arguments as User?;
+
+    if (dataUser != null) {
+      userProv.initEditUser(dataUser);
+    } else {
+      userProv.initAddUser();
+    }
 
     String titleAdd = "Add User";
     String titleEdit = "Edit User";
@@ -21,19 +27,13 @@ class AddUserScreen extends StatelessWidget {
     List<String> roles = ['Administrator', 'Kasir', 'Manager'];
     String defaultRole = 'Administrator';
 
-    if (datauser != null) {
-      userProv.initEditUser(datauser);
-    } else {
-      userProv.initAddUser();
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: datauser != null ? Text(titleEdit) : Text(titleAdd),
+        title: userProv.initUser != null ? Text(titleEdit) : Text(titleAdd),
       ),
       body: Container(
         padding: const EdgeInsets.only(
-          top: 10.0,
+          top: 15.0,
           left: 8.0,
           right: 8.0,
         ),
@@ -42,6 +42,7 @@ class AddUserScreen extends StatelessWidget {
           child: Column(
             children: [
               TextField(
+                controller: userProv.cUsername,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Username',
@@ -50,36 +51,39 @@ class AddUserScreen extends StatelessWidget {
                   filled: true,
                   labelText: 'Username',
                 ),
+                readOnly: dataUser != null ? true : false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               TextField(
+                controller: userProv.cPassword,
                 obscureText: true,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.black26),
+                  hintStyle: const TextStyle(color: Colors.black26),
                   fillColor: Colors.grey[100],
                   filled: true,
                   labelText: 'Password',
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               TextField(
+                controller: userProv.cRePassword,
                 obscureText: true,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   hintText: 'Re-Password',
-                  hintStyle: TextStyle(color: Colors.black26),
+                  hintStyle: const TextStyle(color: Colors.black26),
                   fillColor: Colors.grey[100],
                   filled: true,
                   labelText: 'Re-Password',
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               DropdownButton(
@@ -94,13 +98,33 @@ class AddUserScreen extends StatelessWidget {
                   defaultRole = value.toString();
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               ElevatedButton(
-                onPressed: () {},
-                child: const Text('Simpan'),
+                onPressed: () {
+                  if (dataUser != null) {
+                    debugPrint('fungsi edit user');
+                  } else {
+                    debugPrint('fungsi simpan user');
+                  }
+                },
+                child: const Text(
+                  'Simpan',
+                  style: TextStyle(fontSize: 18.0),
+                ),
               ),
+              dataUser != null
+                  ? TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Hapus Akun',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 15.0,
+                    ),
             ],
           ),
         ),

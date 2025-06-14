@@ -3,45 +3,25 @@ import 'package:liviapos/model/user.dart';
 
 class UserProvider with ChangeNotifier {
   User? _initUser;
-  String _username = '';
-  String _password = '';
-  String _role = '';
+
+  TextEditingController cUsername = TextEditingController();
+  TextEditingController cPassword = TextEditingController();
+  TextEditingController cRePassword = TextEditingController();
 
   void initEditUser(User user) {
     _initUser = user;
-    _username = user.username;
-    _password = user.password;
-    _role = user.role;
-    notifyListeners();
+    cUsername.text = user.username;
+    cPassword.text = user.password;
+    cRePassword.text = user.password;
   }
 
   void initAddUser() {
     _initUser = null;
-    _username = '';
-    _password = '';
-    _role = '';
-    notifyListeners();
+    cUsername.text = '';
+    cPassword.text = '';
+    cRePassword.text = '';
   }
 
   //getter
   User? get initUser => _initUser;
-  String get username => _username;
-  String get password => _password;
-  String get role => _role;
-
-  //setter
-  set username(val) {
-    _username = val;
-    notifyListeners();
-  }
-
-  set password(val) {
-    _password = val;
-    notifyListeners();
-  }
-
-  set role(val) {
-    _role = val;
-    notifyListeners();
-  }
 }
