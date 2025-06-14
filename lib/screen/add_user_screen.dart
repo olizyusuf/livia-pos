@@ -10,7 +10,7 @@ class AddUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+    final userProv = Provider.of<UserProvider>(context, listen: false);
     User? dataUser = ModalRoute.of(context)?.settings.arguments as User?;
 
     if (dataUser != null) {
@@ -24,21 +24,18 @@ class AddUserScreen extends StatelessWidget {
 
     DisplayHelper displayHelper = DisplayHelper();
 
-    List<String> roles = ['Administrator', 'Kasir', 'Manager'];
-    String defaultRole = 'Administrator';
-
     return Scaffold(
       appBar: AppBar(
         title: userProv.initUser != null ? Text(titleEdit) : Text(titleAdd),
       ),
       body: Container(
         padding: const EdgeInsets.only(
-          top: 15.0,
           left: 8.0,
           right: 8.0,
         ),
         width: displayHelper.widthDp(context),
         child: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 10.0),
           child: Column(
             children: [
               TextField(
@@ -47,7 +44,8 @@ class AddUserScreen extends StatelessWidget {
                   border: const OutlineInputBorder(),
                   hintText: 'Username',
                   hintStyle: const TextStyle(color: Colors.black26),
-                  fillColor: Colors.grey[100],
+                  fillColor:
+                      dataUser != null ? Colors.grey[400] : Colors.grey[100],
                   filled: true,
                   labelText: 'Username',
                 ),
@@ -86,16 +84,28 @@ class AddUserScreen extends StatelessWidget {
               const SizedBox(
                 height: 15.0,
               ),
-              DropdownButton(
-                value: defaultRole,
-                items: roles.map((String value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
+              Consumer<UserProvider>(
+                builder: (context, prov, child) {
+                  return DropdownButtonFormField<String>(
+                    value: prov.role,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintStyle: const TextStyle(color: Colors.black26),
+                      fillColor: Colors.grey[100],
+                      filled: true,
+                      labelText: 'Role',
+                    ),
+                    items: prov.roles.map((String valrole) {
+                      return DropdownMenuItem<String>(
+                        value: valrole,
+                        child: Text(valrole),
+                      );
+                    }).toList(),
+                    onChanged: (String? valrole) {
+                      prov.role = valrole!;
+                      debugPrint(prov.role);
+                    },
                   );
-                }).toList(),
-                onChanged: (value) {
-                  defaultRole = value.toString();
                 },
               ),
               const SizedBox(
@@ -116,7 +126,37 @@ class AddUserScreen extends StatelessWidget {
               ),
               dataUser != null
                   ? TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              // To display the title it is optional
+                              title: const Text('Peringatan'),
+                              // Message which will be pop up on the screen
+                              content: const Text('Apakah data ingin dihapus?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  child: const Text('Batal'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  child: const Text('Ya'),
+                                ),
+                              ],
+                            );
+                          },
+                        ).then(
+                          (value) {
+                            if (value) Navigator.of(context).pop();
+                          },
+                        );
+                      },
                       child: const Text(
                         'Hapus Akun',
                         style: TextStyle(color: Colors.red),

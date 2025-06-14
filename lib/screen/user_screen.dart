@@ -67,7 +67,7 @@ class UserScreen extends StatelessWidget {
                         Navigator.pushNamed(context, '/add_user',
                             arguments: datauser);
                       },
-                      icon: Icon(Icons.edit_square),
+                      icon: const Icon(Icons.edit_square),
                     ),
                     tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],
                   );
