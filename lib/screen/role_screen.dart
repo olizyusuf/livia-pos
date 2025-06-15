@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/model/role.dart';
 
 import '../helper/display_helper.dart';
 
@@ -50,7 +51,14 @@ class RoleScreen extends StatelessWidget {
                   return ListTile(
                     title: Text("Administrator ${index.toString()}"),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final dataRole = Role(
+                            id: index,
+                            nama: 'Administrator',
+                            permission: "11100110");
+                        Navigator.pushNamed(context, '/add_role',
+                            arguments: dataRole);
+                      },
                       icon: const Icon(Icons.edit_square),
                     ),
                     tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],

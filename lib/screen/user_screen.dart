@@ -62,7 +62,7 @@ class UserScreen extends StatelessWidget {
                             id: index,
                             username: "akun ${index}",
                             password: "default",
-                            role: "Administrator");
+                            role: "Kasir");
 
                         Navigator.pushNamed(context, '/add_user',
                             arguments: datauser);

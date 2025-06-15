@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
-        )
+        ),
       ],
       child: MaterialApp(
         title: 'Livia Pos',
