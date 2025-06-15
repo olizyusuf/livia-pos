@@ -7,7 +7,7 @@ class UserProvider extends ChangeNotifier {
   Role? _initRole;
   String _role = 'Administrator';
   String _namaRole = '';
-  String _permission = '';
+  List<String> _permission = [];
 
   TextEditingController cUsername = TextEditingController();
   TextEditingController cPassword = TextEditingController();
@@ -54,11 +54,28 @@ class UserProvider extends ChangeNotifier {
     _initRole = role;
     _namaRole = role.nama;
     cNamaRole.text = role.nama;
-    _permission = role.permission;
+    _permission = role.permission.split('');
   }
 
   void initAddRole() {
     _initRole = null;
+    _namaRole = '';
+    cNamaRole.text = '';
+    _permission = ['0', '0', '0', '0', '0', '0', '0', '0'];
+  }
+
+  void changePermission(int index, bool value) {
+    if (value) {
+      _permission[index] = '1';
+    } else {
+      _permission[index] = '0';
+    }
+
+    notifyListeners();
+  }
+
+  void addPermission(String permission) {
+    debugPrint(permission);
   }
 
   //getter
@@ -66,7 +83,7 @@ class UserProvider extends ChangeNotifier {
   Role? get initRole => _initRole;
   String get role => _role;
   String get namaRole => _namaRole;
-  String get permission => _permission;
+  List<String> get permission => _permission;
 
   //setter
   set role(String value) {
@@ -79,7 +96,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set permission(String value) {
+  set permission(List<String> value) {
     _permission = value;
     notifyListeners();
   }

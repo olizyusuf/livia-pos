@@ -57,35 +57,93 @@ class AddRoleScreen extends StatelessWidget {
                 height: 15.0,
               ),
               Container(
-                color: Colors.grey[100],
-                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                height: displayHelper.heightDp(context) * 0.7,
-                child: ListView.builder(
-                  itemCount: userProv.menus.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      color: index % 2 == 0 ? Colors.grey[100] : Colors.white,
-                      child: ListTile(
-                        title: Text(userProv.menus[index]),
-                        trailing: Checkbox(
-                          activeColor: Colors.green,
-                          checkColor: Colors.white,
-                          value: true,
-                          onChanged: (newValue) {
-                            debugPrint(newValue.toString());
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+                  color: Colors.grey[100],
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  height: displayHelper.heightDp(context) * 0.7,
+                  child: Consumer<UserProvider>(
+                    builder: (context, prov, child) {
+                      return ListView.builder(
+                        itemCount: prov.menus.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            color: index % 2 == 0
+                                ? Colors.grey[100]
+                                : Colors.white,
+                            child: ListTile(
+                              title: Text(prov.menus[index]),
+                              trailing: Checkbox(
+                                activeColor: Colors.green,
+                                checkColor: Colors.white,
+                                value: prov.permission[index] != '0'
+                                    ? true
+                                    : false,
+                                onChanged: (newValue) {
+                                  if (newValue != null) {
+                                    prov.changePermission(index, newValue);
+                                  }
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )),
               const SizedBox(
                 height: 10.0,
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Simpan'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  dataRole != null
+                      ? TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  // To display the title it is optional
+                                  title: const Text('Peringatan'),
+                                  // Message which will be pop up on the screen
+                                  content:
+                                      const Text('Apakah data ingin dihapus?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: const Text('Batal'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: const Text('Ya'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ).then(
+                              (value) {
+                                if (value) Navigator.of(context).pop();
+                              },
+                            );
+                          },
+                          child: const Text(
+                            'Hapus Role',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                      : const SizedBox(
+                          width: 0,
+                        ),
+                  ElevatedButton(
+                    onPressed: () {
+                      userProv.addPermission(userProv.permission.join());
+                    },
+                    child: const Text('Simpan'),
+                  ),
+                ],
               ),
             ],
           ),

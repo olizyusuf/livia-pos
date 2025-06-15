@@ -54,7 +54,7 @@ class RoleScreen extends StatelessWidget {
                       onPressed: () {
                         final dataRole = Role(
                             id: index,
-                            nama: 'Administrator',
+                            nama: 'Administrator $index',
                             permission: "11100110");
                         Navigator.pushNamed(context, '/add_role',
                             arguments: dataRole);
