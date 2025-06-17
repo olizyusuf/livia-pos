@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:liviapos/model/user.dart';
 import 'package:liviapos/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,22 +10,12 @@ class AddUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProv = Provider.of<UserProvider>(context, listen: false);
-    User? dataUser = ModalRoute.of(context)?.settings.arguments as User?;
-
-    if (dataUser != null) {
-      userProv.initEditUser(dataUser);
-    } else {
-      userProv.initAddUser();
-    }
-
-    String titleAdd = "Add User";
-    String titleEdit = "Edit User";
 
     DisplayHelper displayHelper = DisplayHelper();
 
     return Scaffold(
       appBar: AppBar(
-        title: userProv.initUser != null ? Text(titleEdit) : Text(titleAdd),
+        title: Text(userProv.title),
       ),
       body: Container(
         padding: const EdgeInsets.only(
@@ -44,12 +33,13 @@ class AddUserScreen extends StatelessWidget {
                   border: const OutlineInputBorder(),
                   hintText: 'Username',
                   hintStyle: const TextStyle(color: Colors.black26),
-                  fillColor:
-                      dataUser != null ? Colors.grey[400] : Colors.grey[100],
+                  fillColor: userProv.title != 'Add User'
+                      ? Colors.grey[400]
+                      : Colors.grey[100],
                   filled: true,
                   labelText: 'Username',
                 ),
-                readOnly: dataUser != null ? true : false,
+                readOnly: userProv.title != 'Add User' ? true : false,
               ),
               const SizedBox(
                 height: 15.0,
@@ -112,19 +102,13 @@ class AddUserScreen extends StatelessWidget {
                 height: 15.0,
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (dataUser != null) {
-                    debugPrint('fungsi edit user');
-                  } else {
-                    debugPrint('fungsi simpan user');
-                  }
-                },
+                onPressed: () {},
                 child: const Text(
                   'Simpan',
                   style: TextStyle(fontSize: 18.0),
                 ),
               ),
-              dataUser != null
+              userProv.title != 'Add User'
                   ? TextButton(
                       onPressed: () {
                         showDialog(

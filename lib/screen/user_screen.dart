@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/helper/display_helper.dart';
 import 'package:liviapos/model/user.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/user_provider.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+
     String title = "Users";
 
     DisplayHelper displayHelper = DisplayHelper();
@@ -36,6 +41,7 @@ class UserScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        userProv.initAddUser();
                         Navigator.pushNamed(context, '/add_user');
                       },
                       child: const Row(
@@ -64,8 +70,9 @@ class UserScreen extends StatelessWidget {
                             password: "default",
                             role: "Kasir");
 
-                        Navigator.pushNamed(context, '/add_user',
-                            arguments: datauser);
+                        userProv.initEditUser(datauser);
+
+                        Navigator.pushNamed(context, '/add_user');
                       },
                       icon: const Icon(Icons.edit_square),
                     ),
