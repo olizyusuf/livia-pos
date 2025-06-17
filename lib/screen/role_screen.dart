@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/model/role.dart';
+import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
+import '../provider/user_provider.dart';
 
 class RoleScreen extends StatelessWidget {
   const RoleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+
     String title = "Roles";
 
     DisplayHelper displayHelper = DisplayHelper();
@@ -31,6 +35,7 @@ class RoleScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        userProv.initAddRole();
                         Navigator.pushNamed(context, '/add_role');
                       },
                       child: const Row(
@@ -56,8 +61,8 @@ class RoleScreen extends StatelessWidget {
                             id: index,
                             nama: 'Administrator $index',
                             permission: "11100110");
-                        Navigator.pushNamed(context, '/add_role',
-                            arguments: dataRole);
+                        userProv.initEditRole(dataRole);
+                        Navigator.pushNamed(context, '/add_role');
                       },
                       icon: const Icon(Icons.edit_square),
                     ),

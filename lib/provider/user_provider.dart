@@ -56,17 +56,21 @@ class UserProvider extends ChangeNotifier {
   }
 
   void initEditRole(Role role) {
+    _title = 'Edit Role';
     _initRole = role;
     _namaRole = role.nama;
     cNamaRole.text = role.nama;
     _permission = role.permission.split('');
+    notifyListeners();
   }
 
   void initAddRole() {
+    _title = 'Add Role';
     _initRole = null;
     _namaRole = '';
     cNamaRole.text = '';
     _permission = ['0', '0', '0', '0', '0', '0', '0', '0'];
+    notifyListeners();
   }
 
   void changePermission(int index, bool value) {
@@ -79,8 +83,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPermission(String permission) {
-    debugPrint(permission);
+  void addPermission(String namaRole, String permission) {
+    debugPrint('$namaRole $permission');
   }
 
   //getter

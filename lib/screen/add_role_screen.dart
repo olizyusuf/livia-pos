@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:liviapos/model/role.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
@@ -11,24 +10,12 @@ class AddRoleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProv = Provider.of<UserProvider>(context, listen: false);
-    Role? dataRole = ModalRoute.of(context)?.settings.arguments as Role?;
-
-    debugPrint(dataRole.toString());
-
-    if (dataRole != null) {
-      userProv.initEditRole(dataRole);
-    } else {
-      userProv.initAddRole();
-    }
-
-    String titleAdd = "Add Role";
-    String titleEdit = "Edit Role";
 
     DisplayHelper displayHelper = DisplayHelper();
 
     return Scaffold(
       appBar: AppBar(
-        title: dataRole != null ? Text(titleEdit) : Text(titleAdd),
+        title: Text(userProv.title),
       ),
       body: Container(
         padding: const EdgeInsets.only(
@@ -46,12 +33,13 @@ class AddRoleScreen extends StatelessWidget {
                   border: const OutlineInputBorder(),
                   hintText: 'Nama Role',
                   hintStyle: const TextStyle(color: Colors.black26),
-                  fillColor:
-                      dataRole != null ? Colors.grey[400] : Colors.grey[100],
+                  fillColor: userProv.title != 'Add Role'
+                      ? Colors.grey[400]
+                      : Colors.grey[100],
                   filled: true,
                   labelText: 'Nama Role',
                 ),
-                readOnly: dataRole != null ? true : false,
+                readOnly: userProv.title != 'Add Role' ? true : false,
               ),
               const SizedBox(
                 height: 15.0,
@@ -95,7 +83,7 @@ class AddRoleScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  dataRole != null
+                  userProv.title != 'Add Role'
                       ? TextButton(
                           onPressed: () {
                             showDialog(
@@ -139,7 +127,8 @@ class AddRoleScreen extends StatelessWidget {
                         ),
                   ElevatedButton(
                     onPressed: () {
-                      userProv.addPermission(userProv.permission.join());
+                      userProv.addPermission(
+                          userProv.cNamaRole.text, userProv.permission.join());
                     },
                     child: const Text('Simpan'),
                   ),
