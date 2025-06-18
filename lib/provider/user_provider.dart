@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:liviapos/model/role.dart';
 import 'package:liviapos/model/user.dart';
 
+import '../databases/db_helper.dart';
+
 class UserProvider extends ChangeNotifier {
   User? _initUser;
   Role? _initRole;
@@ -29,6 +31,8 @@ class UserProvider extends ChangeNotifier {
     "Setting"
   ];
 
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
   void initEditUser(User user) {
     getRoles();
     _title = 'Edit User';
@@ -51,8 +55,12 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getRoles() {
-    roles = ['Administrator', 'Kasir', 'Admin'];
+  Future<void> getRoles() async {
+    try {
+      final data = _dbHelper.getRoles();
+      debugPrint(data.toString());
+      roles = ['Administrator', 'Kasir', 'Admin'];
+    } catch (e) {}
   }
 
   void initEditRole(Role role) {
