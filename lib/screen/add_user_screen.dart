@@ -92,7 +92,7 @@ class AddUserScreen extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (String? valrole) {
-                      prov.role = valrole!;
+                      prov.setRole = valrole!;
                       debugPrint(prov.role);
                     },
                   );

@@ -127,8 +127,9 @@ class AddRoleScreen extends StatelessWidget {
                         ),
                   ElevatedButton(
                     onPressed: () {
-                      userProv.addPermission(
-                          userProv.cNamaRole.text, userProv.permission.join());
+                      userProv.insertRole();
+                      // userProv.addPermission(
+                      //     userProv.cNamaRole.text, userProv.permission.join());
                     },
                     child: const Text('Simpan'),
                   ),

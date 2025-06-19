@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:liviapos/model/role.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
@@ -11,6 +10,8 @@ class RoleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProv = Provider.of<UserProvider>(context, listen: false);
+
+    userProv.getRoles();
 
     String title = "Roles";
 
@@ -51,17 +52,13 @@ class RoleScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 3,
+                itemCount: userProv.roles.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text("Administrator ${index.toString()}"),
+                    title: Text(userProv.roles[index]),
                     trailing: IconButton(
                       onPressed: () {
-                        final dataRole = Role(
-                            id: index,
-                            nama: 'Administrator $index',
-                            permission: "11100110");
-                        userProv.initEditRole(dataRole);
+                        userProv.initEditRole(userProv.roles[index]);
                         Navigator.pushNamed(context, '/add_role');
                       },
                       icon: const Icon(Icons.edit_square),

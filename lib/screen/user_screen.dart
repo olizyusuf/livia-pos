@@ -68,7 +68,7 @@ class UserScreen extends StatelessWidget {
                             id: index,
                             username: "akun ${index}",
                             password: "default",
-                            role: "Kasir");
+                            role: "Administrator");
 
                         userProv.initEditUser(datauser);
 

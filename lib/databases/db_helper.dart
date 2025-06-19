@@ -1,3 +1,4 @@
+import 'package:liviapos/model/role.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -35,10 +36,10 @@ class DatabaseHelper {
     // table roles + default data
     await db.execute('''
       CREATE TABLE $roleTable(
-      id INT PRIMARY KEY AUTOINCREMENT,
-      nama TEXT UNIQUE,
-      permission TEXT,
-      )
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nama TEXT UNIQUE NOT NULL,
+      permission TEXT NOT NULL
+      );
     ''');
     await db.insert(
       roleTable,
@@ -50,5 +51,24 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getRoles() async {
     final db = await database;
     return db.query(roleTable);
+  }
+
+  Future<Role?> getRoleByNama(String nama) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'roles',
+      where: 'nama = ?',
+      whereArgs: [nama],
+    );
+
+    if (maps.isNotEmpty) {
+      return Role.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<int> insertUser(Role role) async {
+    final db = await database;
+    return await db.insert('roles', role.toMap());
   }
 }

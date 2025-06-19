@@ -12,4 +12,12 @@ class Role {
       'permission': permission,
     };
   }
+
+  factory Role.fromMap(Map<String, dynamic> map) {
+    return Role(
+      id: map['id'],
+      nama: map['nama'],
+      permission: map['permission'],
+    );
+  }
 }

@@ -6,7 +6,7 @@ import '../databases/db_helper.dart';
 
 class UserProvider extends ChangeNotifier {
   User? _initUser;
-  Role? _initRole;
+  String? _initRole;
   String _role = 'Administrator';
   String _namaRole = '';
   List<String> _permission = [];
@@ -33,8 +33,9 @@ class UserProvider extends ChangeNotifier {
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  void initEditUser(User user) {
-    getRoles();
+  // USER SCREEN
+  void initEditUser(User user) async {
+    await getRoles();
     _title = 'Edit User';
     _initUser = user;
     cUsername.text = user.username;
@@ -44,8 +45,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initAddUser() {
-    getRoles();
+  void initAddUser() async {
+    await getRoles();
     _title = 'Add User';
     _initUser = null;
     cUsername.text = '';
@@ -55,20 +56,51 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ROLE SCREEN
   Future<void> getRoles() async {
     try {
-      final data = _dbHelper.getRoles();
-      debugPrint(data.toString());
-      roles = ['Administrator', 'Kasir', 'Admin'];
-    } catch (e) {}
+      final data = await _dbHelper.getRoles();
+      debugPrint(data.length.toString());
+      roles.clear();
+      for (var d in data) {
+        roles.add(d['nama']);
+      }
+      debugPrint(roles.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  void initEditRole(Role role) {
+  Future<void> insertRole() async {
+    if (cNamaRole.text.isEmpty && permission.isEmpty) {
+      debugPrint('masih kosong nama dan permission');
+      notifyListeners();
+      return;
+    }
+    try {
+      debugPrint(cNamaRole.text);
+      debugPrint(_permission.join());
+      await _dbHelper.insertUser(
+          Role(nama: cNamaRole.text, permission: _permission.join()));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> initEditRole(String val) async {
     _title = 'Edit Role';
-    _initRole = role;
-    _namaRole = role.nama;
-    cNamaRole.text = role.nama;
-    _permission = role.permission.split('');
+    _initRole = val;
+    try {
+      final data = await _dbHelper.getRoleByNama(val);
+      debugPrint(data.toString());
+      _namaRole = data!.nama;
+      cNamaRole.text = data.nama;
+      _permission = data.permission.split('');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
     notifyListeners();
   }
 
@@ -97,24 +129,24 @@ class UserProvider extends ChangeNotifier {
 
   //getter
   User? get initUser => _initUser;
-  Role? get initRole => _initRole;
+  String? get initRole => _initRole;
   String get role => _role;
   String get namaRole => _namaRole;
   List<String> get permission => _permission;
   String get title => _title;
 
   //setter
-  set role(String value) {
+  set setRole(String value) {
     _role = value;
     notifyListeners();
   }
 
-  set namaRole(String value) {
+  set setNamaRole(String value) {
     _namaRole = value;
     notifyListeners();
   }
 
-  set permission(List<String> value) {
+  set setPermission(List<String> value) {
     _permission = value;
     notifyListeners();
   }
