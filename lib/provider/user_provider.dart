@@ -11,11 +11,11 @@ class UserProvider extends ChangeNotifier {
   String _namaRole = '';
   List<String> _permission = [];
   String _title = '';
+  String _message = '';
 
   TextEditingController cUsername = TextEditingController();
   TextEditingController cPassword = TextEditingController();
   TextEditingController cRePassword = TextEditingController();
-
   TextEditingController cNamaRole = TextEditingController();
 
   List<String> roles = [];
@@ -60,32 +60,16 @@ class UserProvider extends ChangeNotifier {
   Future<void> getRoles() async {
     try {
       final data = await _dbHelper.getRoles();
-      debugPrint(data.length.toString());
+      // debugPrint(data.length.toString());
       roles.clear();
       for (var d in data) {
         roles.add(d['nama']);
       }
-      debugPrint(roles.toString());
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  Future<void> insertRole() async {
-    if (cNamaRole.text.isEmpty && permission.isEmpty) {
-      debugPrint('masih kosong nama dan permission');
       notifyListeners();
-      return;
-    }
-    try {
-      debugPrint(cNamaRole.text);
-      debugPrint(_permission.join());
-      await _dbHelper.insertUser(
-          Role(nama: cNamaRole.text, permission: _permission.join()));
+      // debugPrint(roles.toString());
     } catch (e) {
       debugPrint(e.toString());
     }
-    notifyListeners();
   }
 
   Future<void> initEditRole(String val) async {
@@ -93,10 +77,11 @@ class UserProvider extends ChangeNotifier {
     _initRole = val;
     try {
       final data = await _dbHelper.getRoleByNama(val);
-      debugPrint(data.toString());
+      // debugPrint(data.toString());
       _namaRole = data!.nama;
       cNamaRole.text = data.nama;
       _permission = data.permission.split('');
+      notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -123,8 +108,42 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPermission(String namaRole, String permission) {
-    debugPrint('$namaRole $permission');
+  // INSERT ROLE
+  Future<void> insertRole() async {
+    if (cNamaRole.text.isEmpty || permission.isEmpty) {
+      _message = 'Nama wajib di isi..';
+      notifyListeners();
+      return;
+    }
+    try {
+      debugPrint(cNamaRole.text);
+      debugPrint(_permission.join());
+      await _dbHelper.insertRole(
+          Role(nama: cNamaRole.text, permission: _permission.join()));
+      getRoles();
+      initAddRole();
+      _message = 'Berhasil Disimpan';
+    } catch (e) {
+      _message = 'Gagal disimpan';
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteRole() async {
+    if (cNamaRole.text.isEmpty) {
+      debugPrint('tidak ditemukan, gagal dihapus.');
+    }
+    try {
+      await _dbHelper.deleteRole(_namaRole);
+      debugPrint('Berhasil dihapus.');
+    } catch (e) {
+      debugPrint('Error, gagal dihapus.');
+      debugPrint(e.toString());
+    }
+    getRoles();
+    initAddRole();
+    notifyListeners();
   }
 
   //getter
@@ -134,6 +153,7 @@ class UserProvider extends ChangeNotifier {
   String get namaRole => _namaRole;
   List<String> get permission => _permission;
   String get title => _title;
+  String get message => _message;
 
   //setter
   set setRole(String value) {
@@ -151,8 +171,13 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set title(String value) {
+  set setTitle(String value) {
     _title = value;
+    notifyListeners();
+  }
+
+  set setMessage(String value) {
+    _message = value;
     notifyListeners();
   }
 }

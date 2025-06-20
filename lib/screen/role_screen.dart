@@ -50,24 +50,29 @@ class RoleScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: userProv.roles.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(userProv.roles[index]),
-                    trailing: IconButton(
-                      onPressed: () {
-                        userProv.initEditRole(userProv.roles[index]);
-                        Navigator.pushNamed(context, '/add_role');
-                      },
-                      icon: const Icon(Icons.edit_square),
-                    ),
-                    tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],
-                  );
-                },
-              ),
-            ),
+            Consumer<UserProvider>(
+              builder: (context, prov, child) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: prov.roles.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(prov.roles[index]),
+                        trailing: IconButton(
+                          onPressed: () {
+                            prov.initEditRole(prov.roles[index]);
+                            Navigator.pushNamed(context, '/add_role');
+                          },
+                          icon: const Icon(Icons.edit_square),
+                        ),
+                        tileColor:
+                            index % 2 == 0 ? Colors.white : Colors.grey[200],
+                      );
+                    },
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

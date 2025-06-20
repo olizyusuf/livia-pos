@@ -67,8 +67,13 @@ class DatabaseHelper {
     return null;
   }
 
-  Future<int> insertUser(Role role) async {
+  Future<int> insertRole(Role role) async {
     final db = await database;
-    return await db.insert('roles', role.toMap());
+    return await db.insert(roleTable, role.toMap());
+  }
+
+  Future<int> deleteRole(String role) async {
+    final db = await database;
+    return await db.delete(roleTable, where: 'nama = ?', whereArgs: [role]);
   }
 }

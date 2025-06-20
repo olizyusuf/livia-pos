@@ -104,6 +104,7 @@ class AddRoleScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                       onPressed: () {
+                                        userProv.deleteRole();
                                         Navigator.of(context).pop(true);
                                       },
                                       child: const Text('Ya'),
@@ -127,9 +128,17 @@ class AddRoleScreen extends StatelessWidget {
                         ),
                   ElevatedButton(
                     onPressed: () {
-                      userProv.insertRole();
-                      // userProv.addPermission(
-                      //     userProv.cNamaRole.text, userProv.permission.join());
+                      if (userProv.title != 'Add Role') {
+                        // update role
+                      } else {
+                        userProv.insertRole().then(
+                          (value) {
+                            if (userProv.message.contains('Berhasil')) {
+                              Navigator.pop(context);
+                            }
+                          },
+                        );
+                      }
                     },
                     child: const Text('Simpan'),
                   ),

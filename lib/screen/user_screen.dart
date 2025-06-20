@@ -12,6 +12,8 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProv = Provider.of<UserProvider>(context, listen: false);
 
+    userProv.getRoles();
+
     String title = "Users";
 
     DisplayHelper displayHelper = DisplayHelper();
