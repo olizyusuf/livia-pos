@@ -8,6 +8,7 @@ class UserProvider extends ChangeNotifier {
   User? _initUser;
   String? _initRole;
   String _role = 'Administrator';
+  int? _idRole;
   String _namaRole = '';
   List<String> _permission = [];
   String _title = '';
@@ -78,7 +79,8 @@ class UserProvider extends ChangeNotifier {
     try {
       final data = await _dbHelper.getRoleByNama(val);
       // debugPrint(data.toString());
-      _namaRole = data!.nama;
+      _idRole = data!.id;
+      _namaRole = data.nama;
       cNamaRole.text = data.nama;
       _permission = data.permission.split('');
       notifyListeners();
@@ -95,6 +97,7 @@ class UserProvider extends ChangeNotifier {
     _namaRole = '';
     cNamaRole.text = '';
     _permission = ['0', '0', '0', '0', '0', '0', '0', '0'];
+    _message = '';
     notifyListeners();
   }
 
@@ -130,19 +133,42 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteRole() async {
-    if (cNamaRole.text.isEmpty) {
-      debugPrint('tidak ditemukan, gagal dihapus.');
+  Future<void> udpateRole() async {
+    if (cNamaRole.text.isEmpty || permission.isEmpty) {
+      _message = 'Nama wajib di isi..';
+      notifyListeners();
+      return;
     }
     try {
+      await _dbHelper.updateRole(Role(
+          id: _idRole, nama: cNamaRole.text, permission: _permission.join()));
+      getRoles();
+      initAddRole();
+      _message = 'Berhasil Diperbaharui';
+    } catch (e) {
+      _message = 'Gagal Diperbaharui';
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteRole() async {
+    if (cNamaRole.text.isEmpty) {
+      _message = 'Tidak ditemukan, gagal dihapus.';
+      notifyListeners();
+      return;
+    }
+    try {
+      _message = 'Berhasil dihapus';
       await _dbHelper.deleteRole(_namaRole);
+      getRoles();
+      initAddRole();
       debugPrint('Berhasil dihapus.');
     } catch (e) {
       debugPrint('Error, gagal dihapus.');
       debugPrint(e.toString());
+      _message = 'Error, gagal dihapus.';
     }
-    getRoles();
-    initAddRole();
     notifyListeners();
   }
 

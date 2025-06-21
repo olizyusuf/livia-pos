@@ -104,8 +104,11 @@ class AddRoleScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        userProv.deleteRole();
-                                        Navigator.of(context).pop(true);
+                                        if (userProv.cNamaRole.text !=
+                                            'Administrator') {
+                                          userProv.deleteRole();
+                                          Navigator.of(context).pop(true);
+                                        }
                                       },
                                       child: const Text('Ya'),
                                     ),
@@ -114,7 +117,12 @@ class AddRoleScreen extends StatelessWidget {
                               },
                             ).then(
                               (value) {
-                                if (value) Navigator.of(context).pop();
+                                if (value) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(userProv.message)));
+                                }
                               },
                             );
                           },
@@ -129,12 +137,22 @@ class AddRoleScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (userProv.title != 'Add Role') {
-                        // update role
+                        userProv.udpateRole().then(
+                          (value) {
+                            if (userProv.message.contains('Berhasil')) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
+                            }
+                          },
+                        );
                       } else {
                         userProv.insertRole().then(
                           (value) {
                             if (userProv.message.contains('Berhasil')) {
                               Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
                             }
                           },
                         );
