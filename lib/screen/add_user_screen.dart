@@ -102,7 +102,35 @@ class AddUserScreen extends StatelessWidget {
                 height: 15.0,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (userProv.title != 'Add User') {
+                    userProv.updateUser().then(
+                      (value) {
+                        if (userProv.message.contains('Berhasil')) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        }
+                      },
+                    );
+                  } else {
+                    userProv.insertUser().then(
+                      (value) {
+                        if (userProv.message.contains('Berhasil')) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        }
+                      },
+                    );
+                  }
+                },
                 child: const Text(
                   'Simpan',
                   style: TextStyle(fontSize: 18.0),
@@ -128,7 +156,10 @@ class AddUserScreen extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(true);
+                                    if (userProv.cUsername.text != 'ADMIN') {
+                                      userProv.deleteUser();
+                                      Navigator.of(context).pop(true);
+                                    }
                                   },
                                   child: const Text('Ya'),
                                 ),
@@ -137,7 +168,11 @@ class AddUserScreen extends StatelessWidget {
                           },
                         ).then(
                           (value) {
-                            if (value) Navigator.of(context).pop();
+                            if (value) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
+                            }
                           },
                         );
                       },

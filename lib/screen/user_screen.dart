@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/helper/display_helper.dart';
-import 'package:liviapos/model/user.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/user_provider.dart';
@@ -13,6 +12,7 @@ class UserScreen extends StatelessWidget {
     final userProv = Provider.of<UserProvider>(context, listen: false);
 
     userProv.getRoles();
+    userProv.getUsers();
 
     String title = "Users";
 
@@ -57,32 +57,34 @@ class UserScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text("index ${index.toString()}"),
-                    subtitle: Text("Administrator"),
-                    trailing: IconButton(
-                      onPressed: () {
-                        final datauser = User(
-                            id: index,
-                            username: "akun ${index}",
-                            password: "default",
-                            role: "Administrator");
+            Consumer<UserProvider>(
+              builder: (context, prov, child) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: prov.users.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(prov.users[index].username),
+                        subtitle: Text(
+                          prov.users[index].role,
+                          style: const TextStyle(fontSize: 12.0),
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            userProv.initEditUser(prov.users[index].username);
 
-                        userProv.initEditUser(datauser);
-
-                        Navigator.pushNamed(context, '/add_user');
-                      },
-                      icon: const Icon(Icons.edit_square),
-                    ),
-                    tileColor: index % 2 == 0 ? Colors.white : Colors.grey[200],
-                  );
-                },
-              ),
-            ),
+                            Navigator.pushNamed(context, '/add_user');
+                          },
+                          icon: const Icon(Icons.edit_square),
+                        ),
+                        tileColor:
+                            index % 2 == 0 ? Colors.white : Colors.grey[200],
+                      );
+                    },
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

@@ -5,9 +5,9 @@ import 'package:liviapos/model/user.dart';
 import '../databases/db_helper.dart';
 
 class UserProvider extends ChangeNotifier {
-  User? _initUser;
+  String? _initUser;
   String? _initRole;
-  String _role = 'Administrator';
+  String _role = 'ADMINISTRATOR';
   int? _idRole;
   String _namaRole = '';
   List<String> _permission = [];
@@ -20,6 +20,7 @@ class UserProvider extends ChangeNotifier {
   TextEditingController cNamaRole = TextEditingController();
 
   List<String> roles = [];
+  List<User> users = [];
 
   List<String> menus = [
     "Penjualan",
@@ -34,30 +35,137 @@ class UserProvider extends ChangeNotifier {
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  // USER SCREEN
-  void initEditUser(User user) async {
+  //// USER SCREEN /////////////
+  void initEditUser(String val) async {
     await getRoles();
     _title = 'Edit User';
-    _initUser = user;
-    cUsername.text = user.username;
-    cPassword.text = user.password;
-    cRePassword.text = user.password;
-    _role = user.role;
+
+    try {
+      final data = await _dbHelper.getUserByUsername(val);
+      _initUser = val;
+      cUsername.text = data!.username;
+      cPassword.text = data.password;
+      cRePassword.text = data.password;
+      _role = data.role;
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
     notifyListeners();
   }
 
   void initAddUser() async {
-    await getRoles();
+    getRoles();
     _title = 'Add User';
     _initUser = null;
     cUsername.text = '';
     cPassword.text = '';
     cRePassword.text = '';
-    _role = 'Administrator';
+    _role = 'ADMINISTRATOR';
     notifyListeners();
   }
 
-  // ROLE SCREEN
+  Future<void> getUsers() async {
+    try {
+      final data = await _dbHelper.getUsers();
+      users.clear();
+      for (var d in data) {
+        users.add(
+          User(
+              id: d['id'],
+              username: d['username'],
+              password: d['password'],
+              role: d['role']),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  //INSERT USER
+  Future<void> insertUser() async {
+    if (cUsername.text.isEmpty ||
+        cPassword.text.isEmpty ||
+        cRePassword.text.isEmpty) {
+      _message = 'Masih ada yang kosong, Semua wajib di isi...';
+      notifyListeners();
+      return;
+    }
+    if (cPassword.text != cRePassword.text) {
+      _message = 'Re-Password berbeda dengan Password...';
+      notifyListeners();
+      return;
+    }
+    try {
+      await _dbHelper.insertUser(
+        User(
+          username: cUsername.text.toUpperCase(),
+          password: cPassword.text,
+          role: role.toUpperCase(),
+        ),
+      );
+      _message = '${cUsername.text.toUpperCase()}, Berhasil Disimpan';
+      getUsers();
+    } catch (e) {
+      _message = 'Gagal disimpan';
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateUser() async {
+    if (cUsername.text.isEmpty ||
+        cPassword.text.isEmpty ||
+        cRePassword.text.isEmpty) {
+      _message = 'Masih ada yang kosong, Semua wajib di isi...';
+      notifyListeners();
+      return;
+    }
+    if (cPassword.text != cRePassword.text) {
+      _message = 'Re-Password berbeda dengan Password...';
+      notifyListeners();
+      return;
+    }
+    try {
+      await _dbHelper.updateUser(
+        User(
+          username: cUsername.text.toUpperCase(),
+          password: cPassword.text,
+          role: role.toUpperCase(),
+        ),
+      );
+      _message = '${cUsername.text.toUpperCase()}, Berhasil diperbaharui..';
+      getUsers();
+    } catch (e) {
+      _message = 'Gagal diperbaharui';
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteUser() async {
+    if (cUsername.text.isEmpty) {
+      _message = 'Tidak ditemukan, gagal dihapus.';
+      notifyListeners();
+      return;
+    }
+    try {
+      _message = 'Berhasil dihapus';
+      await _dbHelper.deleteUser(cUsername.text);
+      getUsers();
+    } catch (e) {
+      debugPrint('Error, gagal dihapus.');
+      debugPrint(e.toString());
+      _message = 'Error, gagal dihapus.';
+    }
+    notifyListeners();
+  }
+
+  ////////
+
+  /////// ROLE SCREEN //////
   Future<void> getRoles() async {
     try {
       final data = await _dbHelper.getRoles();
@@ -80,8 +188,8 @@ class UserProvider extends ChangeNotifier {
       final data = await _dbHelper.getRoleByNama(val);
       // debugPrint(data.toString());
       _idRole = data!.id;
-      _namaRole = data.nama;
-      cNamaRole.text = data.nama;
+      _namaRole = data.nama.toUpperCase();
+      cNamaRole.text = data.nama.toUpperCase();
       _permission = data.permission.split('');
       notifyListeners();
     } catch (e) {
@@ -114,15 +222,15 @@ class UserProvider extends ChangeNotifier {
   // INSERT ROLE
   Future<void> insertRole() async {
     if (cNamaRole.text.isEmpty || permission.isEmpty) {
-      _message = 'Nama wajib di isi..';
+      _message = 'Nama wajib di isi...';
       notifyListeners();
       return;
     }
     try {
       debugPrint(cNamaRole.text);
       debugPrint(_permission.join());
-      await _dbHelper.insertRole(
-          Role(nama: cNamaRole.text, permission: _permission.join()));
+      await _dbHelper.insertRole(Role(
+          nama: cNamaRole.text.toUpperCase(), permission: _permission.join()));
       getRoles();
       initAddRole();
       _message = 'Berhasil Disimpan';
@@ -141,7 +249,9 @@ class UserProvider extends ChangeNotifier {
     }
     try {
       await _dbHelper.updateRole(Role(
-          id: _idRole, nama: cNamaRole.text, permission: _permission.join()));
+          id: _idRole,
+          nama: cNamaRole.text.toUpperCase(),
+          permission: _permission.join()));
       getRoles();
       initAddRole();
       _message = 'Berhasil Diperbaharui';
@@ -173,7 +283,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   //getter
-  User? get initUser => _initUser;
+  String? get initUser => _initUser;
   String? get initRole => _initRole;
   String get role => _role;
   String get namaRole => _namaRole;

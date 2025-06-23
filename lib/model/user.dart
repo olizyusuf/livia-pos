@@ -14,4 +14,13 @@ class User {
       'role': role,
     };
   }
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'],
+      username: map['username'],
+      password: map['password'],
+      role: map['role'],
+    );
+  }
 }
