@@ -105,7 +105,7 @@ class AddRoleScreen extends StatelessWidget {
                                     TextButton(
                                       onPressed: () {
                                         if (userProv.cNamaRole.text !=
-                                            'Administrator') {
+                                            'ADMINISTRATOR') {
                                           userProv.deleteRole();
                                           Navigator.of(context).pop(true);
                                         }
@@ -143,6 +143,9 @@ class AddRoleScreen extends StatelessWidget {
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(userProv.message)));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
                             }
                           },
                         );
@@ -151,6 +154,9 @@ class AddRoleScreen extends StatelessWidget {
                           (value) {
                             if (userProv.message.contains('Berhasil')) {
                               Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
+                            } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(userProv.message)));
                             }
