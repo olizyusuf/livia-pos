@@ -1,4 +1,3 @@
-import 'package:liviapos/model/role.dart';
 import 'package:liviapos/model/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -65,42 +64,6 @@ class DatabaseHelper {
         'role': 'ADMINISTRATOR'
       },
     );
-  }
-
-  //ROLES CRUD
-  Future<List<Map<String, dynamic>>> getRoles() async {
-    final db = await database;
-    return db.query(rolesTable);
-  }
-
-  Future<Role?> getRoleByNama(String nama) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      rolesTable,
-      where: 'nama = ?',
-      whereArgs: [nama],
-    );
-
-    if (maps.isNotEmpty) {
-      return Role.fromMap(maps.first);
-    }
-    return null;
-  }
-
-  Future<int> insertRole(Role role) async {
-    final db = await database;
-    return await db.insert(rolesTable, role.toMap());
-  }
-
-  Future<int> updateRole(Role role) async {
-    final db = await database;
-    return await db.update(rolesTable, role.toMap(),
-        where: 'nama = ?', whereArgs: [role.nama]);
-  }
-
-  Future<int> deleteRole(String role) async {
-    final db = await database;
-    return await db.delete(rolesTable, where: 'nama = ?', whereArgs: [role]);
   }
 
   // USERS CRUD

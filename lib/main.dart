@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
 import 'package:liviapos/screen/role_form_screen.dart';
-import 'package:liviapos/screen/add_user_screen.dart';
+import 'package:liviapos/screen/user_form_screen.dart';
 import 'package:liviapos/screen/main_screen.dart';
 import 'package:liviapos/screen/role_screen.dart';
 import 'package:liviapos/screen/user_screen.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/main': (context) => const MainScreen(),
           '/users': (context) => const UserScreen(),
-          '/add_user': (context) => const AddUserScreen(),
+          '/form_user': (context) => const UserFormScreen(),
           '/roles': (context) => const RoleScreen(),
           '/form_role': (context) => const RoleFormScreen(),
         },

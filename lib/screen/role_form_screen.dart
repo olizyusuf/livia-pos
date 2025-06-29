@@ -105,7 +105,10 @@ class RoleFormScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).pop(true);
+                                        if (roleProv.nama != 'ADMINISTRATOR') {
+                                          roleProv.deleteRole();
+                                          Navigator.of(context).pop(true);
+                                        }
                                       },
                                       child: const Text('Ya'),
                                     ),
@@ -134,18 +137,18 @@ class RoleFormScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (roleProv.title != 'Add Role') {
-                        // roleProv.udpateRole().then(
-                        //   (value) {
-                        //     if (roleProv.message!.contains('Berhasil')) {
-                        //       Navigator.pop(context);
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //           SnackBar(content: Text(roleProv.message!)));
-                        //     } else {
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //           SnackBar(content: Text(roleProv.message!)));
-                        //     }
-                        //   },
-                        // );
+                        roleProv.updateRole().then(
+                          (value) {
+                            if (roleProv.message!.contains('berhasil')) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(roleProv.message!)));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(roleProv.message!)));
+                            }
+                          },
+                        );
                       } else {
                         roleProv
                             .insertRole(Role(

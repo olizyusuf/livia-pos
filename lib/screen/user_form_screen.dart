@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
 
-class AddUserScreen extends StatelessWidget {
-  const AddUserScreen({super.key});
+class UserFormScreen extends StatelessWidget {
+  const UserFormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userProv = Provider.of<UserProvider>(context, listen: false);
-
     DisplayHelper displayHelper = DisplayHelper();
+
+    UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+
+    RoleProvider roleProv = Provider.of<RoleProvider>(context, listen: false);
+
+    roleProv.getRoles();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userProv.title),
+        title: Text(userProv.title!),
       ),
       body: Container(
         padding: const EdgeInsets.only(
@@ -74,10 +79,10 @@ class AddUserScreen extends StatelessWidget {
               const SizedBox(
                 height: 15.0,
               ),
-              Consumer<UserProvider>(
+              Consumer<RoleProvider>(
                 builder: (context, prov, child) {
                   return DropdownButtonFormField<String>(
-                    value: prov.role,
+                    value: userProv.role,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       hintStyle: const TextStyle(color: Colors.black26),
@@ -85,15 +90,15 @@ class AddUserScreen extends StatelessWidget {
                       filled: true,
                       labelText: 'Role',
                     ),
-                    items: prov.roles.map((String valrole) {
+                    items: prov.roles.map((dynamic valrole) {
                       return DropdownMenuItem<String>(
-                        value: valrole,
-                        child: Text(valrole),
+                        value: valrole['nama'].toString(),
+                        child: Text(valrole['nama'].toString()),
                       );
                     }).toList(),
                     onChanged: (String? valrole) {
-                      prov.setRole = valrole!;
-                      debugPrint(prov.role);
+                      userProv.cRole.text = valrole!;
+                      debugPrint(userProv.cRole.text);
                     },
                   );
                 },
@@ -104,31 +109,31 @@ class AddUserScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   if (userProv.title != 'Add User') {
-                    userProv.updateUser().then(
-                      (value) {
-                        if (userProv.message.contains('Berhasil')) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        }
-                      },
-                    );
+                    // userProv.updateUser().then(
+                    //   (value) {
+                    //     if (userProv.message.contains('Berhasil')) {
+                    //       Navigator.pop(context);
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text(userProv.message)));
+                    //     } else {
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text(userProv.message)));
+                    //     }
+                    //   },
+                    // );
                   } else {
-                    userProv.insertUser().then(
-                      (value) {
-                        if (userProv.message.contains('Berhasil')) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        }
-                      },
-                    );
+                    // userProv.insertUser().then(
+                    //   (value) {
+                    //     if (userProv.message.contains('Berhasil')) {
+                    //       Navigator.pop(context);
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text(userProv.message)));
+                    //     } else {
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text(userProv.message)));
+                    //     }
+                    //   },
+                    // );
                   }
                 },
                 child: const Text(
@@ -156,10 +161,10 @@ class AddUserScreen extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    if (userProv.cUsername.text != 'ADMIN') {
-                                      userProv.deleteUser();
-                                      Navigator.of(context).pop(true);
-                                    }
+                                    // if (userProv.cUsername.text != 'ADMIN') {
+                                    //   userProv.deleteUser();
+                                    //   Navigator.of(context).pop(true);
+                                    // }
                                   },
                                   child: const Text('Ya'),
                                 ),
@@ -168,11 +173,11 @@ class AddUserScreen extends StatelessWidget {
                           },
                         ).then(
                           (value) {
-                            if (value) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
-                            }
+                            // if (value) {
+                            //   Navigator.pop(context);
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //       SnackBar(content: Text(userProv.message)));
+                            // }
                           },
                         );
                       },

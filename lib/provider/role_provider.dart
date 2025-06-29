@@ -31,7 +31,7 @@ class RoleProvider extends ChangeNotifier {
   List get roles => _roles;
   String? get message => _message;
 
-  //textfield controller
+  // TEXTFIELD CONTROLLER
   TextEditingController cNama = TextEditingController();
 
   final DatabaseHelper _helperDb = DatabaseHelper();
@@ -59,7 +59,7 @@ class RoleProvider extends ChangeNotifier {
         _roles.add(d);
       }
 
-      debugPrint(_roles.length.toString());
+      // debugPrint(_roles.length.toString());
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
@@ -85,6 +85,8 @@ class RoleProvider extends ChangeNotifier {
         _permission = dataByNama.permission.split('');
       }
 
+      cNama.text = _nama.toString();
+
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
@@ -103,13 +105,53 @@ class RoleProvider extends ChangeNotifier {
       //query
       await db.insert(_tableRole, role.toMap());
 
-      _message = 'Data berhasil disimpan..';
+      _message = '${cNama.text.toUpperCase()} berhasil disimpan..';
       getRoles();
     } catch (e) {
       debugPrint(e.toString());
       _message = 'data gagal disimpan, ada kesalah..';
     }
     notifyListeners();
+  }
+
+  Future<void> updateRole() async {
+    if (_nama!.isEmpty || permission!.isEmpty) {
+      _message = 'Nama atau Permission mohon di isi..';
+      return;
+    }
+    try {
+      final db = await _helperDb.database;
+
+      Role updateData = Role(
+          id: id!,
+          nama: cNama.text.toUpperCase(),
+          permission: _permission!.join(''));
+
+      //query
+      await db.update(_tableRole, updateData.toMap(),
+          where: 'nama = ?', whereArgs: [updateData.nama]);
+
+      _message = '${cNama.text.toUpperCase()} berhasil diperbaharui..';
+
+      getRoles();
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'Data gagal diperbaharui, ada kesalah..';
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteRole() async {
+    try {
+      final db = await _helperDb.database;
+      _message = '$_nama telah berhasil dihapus..';
+      //query
+      await db.delete(_tableRole, where: 'nama = ?', whereArgs: [_nama]);
+
+      getRoles();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void changePermission(int index, bool value) {

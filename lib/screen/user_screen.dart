@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/helper/display_helper.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/user_provider.dart';
@@ -9,14 +10,15 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProv = Provider.of<UserProvider>(context, listen: false);
-
-    // userProv.getRoles();
-    // userProv.getUsers();
+    DisplayHelper displayHelper = DisplayHelper();
 
     String title = "Users";
 
-    DisplayHelper displayHelper = DisplayHelper();
+    UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+    userProv.getUsers();
+
+    RoleProvider roleProv = Provider.of<RoleProvider>(context, listen: false);
+    roleProv.getRoles();
 
     return Scaffold(
       appBar: AppBar(
@@ -43,8 +45,8 @@ class UserScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        userProv.initAddUser();
-                        Navigator.pushNamed(context, '/add_user');
+                        userProv.initAddForm();
+                        Navigator.pushNamed(context, '/form_user');
                       },
                       child: const Row(
                         children: [
@@ -63,23 +65,29 @@ class UserScreen extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: prov.users.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(prov.users[index].username),
-                        subtitle: Text(
-                          prov.users[index].role,
-                          style: const TextStyle(fontSize: 12.0),
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            userProv.initEditUser(prov.users[index].username);
-
-                            Navigator.pushNamed(context, '/add_user');
-                          },
-                          icon: const Icon(Icons.edit_square),
-                        ),
-                        tileColor:
-                            index % 2 == 0 ? Colors.white : Colors.grey[200],
-                      );
+                      if (prov.users.isNotEmpty) {
+                        return ListTile(
+                          title: Text(prov.users[index]['username']),
+                          subtitle: Text(
+                            prov.users[index]['role'],
+                            style: const TextStyle(fontSize: 12.0),
+                          ),
+                          trailing: IconButton(
+                            onPressed: () {
+                              userProv
+                                  .initEditForm(prov.users[index]['username']);
+                              Navigator.pushNamed(context, '/form_user');
+                            },
+                            icon: const Icon(Icons.edit_square),
+                          ),
+                          tileColor:
+                              index % 2 == 0 ? Colors.white : Colors.grey[200],
+                        );
+                      } else {
+                        return const Center(
+                          child: Text('Empty...'),
+                        );
+                      }
                     },
                   ),
                 );
