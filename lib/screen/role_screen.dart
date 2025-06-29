@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
-import '../provider/user_provider.dart';
 
 class RoleScreen extends StatelessWidget {
   const RoleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userProv = Provider.of<UserProvider>(context, listen: false);
-
-    userProv.getRoles();
-
     String title = "Roles";
 
     DisplayHelper displayHelper = DisplayHelper();
+
+    RoleProvider roleProv = Provider.of<RoleProvider>(context, listen: false);
+
+    roleProv.getRoles();
 
     return Scaffold(
       appBar: AppBar(
@@ -36,8 +36,8 @@ class RoleScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        userProv.initAddRole();
-                        Navigator.pushNamed(context, '/add_role');
+                        roleProv.initAddForm();
+                        Navigator.pushNamed(context, '/form_role');
                       },
                       child: const Row(
                         children: [
@@ -50,18 +50,18 @@ class RoleScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Consumer<UserProvider>(
+            Consumer<RoleProvider>(
               builder: (context, prov, child) {
                 return Expanded(
                   child: ListView.builder(
                     itemCount: prov.roles.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(prov.roles[index]),
+                        title: Text(prov.roles[index]['nama']),
                         trailing: IconButton(
                           onPressed: () {
-                            prov.initEditRole(prov.roles[index]);
-                            Navigator.pushNamed(context, '/add_role');
+                            prov.initEditForm(prov.roles[index]['nama']);
+                            Navigator.pushNamed(context, '/form_role');
                           },
                           icon: const Icon(Icons.edit_square),
                         ),

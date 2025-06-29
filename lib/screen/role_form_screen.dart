@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/model/role.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
-import '../provider/user_provider.dart';
 
-class AddRoleScreen extends StatelessWidget {
-  const AddRoleScreen({super.key});
+class RoleFormScreen extends StatelessWidget {
+  const RoleFormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userProv = Provider.of<UserProvider>(context, listen: false);
-
     DisplayHelper displayHelper = DisplayHelper();
+
+    RoleProvider roleProv = Provider.of<RoleProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userProv.title),
+        title: Text(roleProv.title),
       ),
       body: Container(
         padding: const EdgeInsets.only(
@@ -27,19 +28,19 @@ class AddRoleScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                controller: userProv.cNamaRole,
+              TextFormField(
+                controller: roleProv.cNama,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Nama Role',
                   hintStyle: const TextStyle(color: Colors.black26),
-                  fillColor: userProv.title != 'Add Role'
+                  fillColor: roleProv.title != 'Add Role'
                       ? Colors.grey[400]
                       : Colors.grey[100],
                   filled: true,
                   labelText: 'Nama Role',
                 ),
-                readOnly: userProv.title != 'Add Role' ? true : false,
+                readOnly: roleProv.title != 'Add Role' ? true : false,
               ),
               const SizedBox(
                 height: 15.0,
@@ -48,7 +49,7 @@ class AddRoleScreen extends StatelessWidget {
                   color: Colors.grey[100],
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                   height: displayHelper.heightDp(context) * 0.7,
-                  child: Consumer<UserProvider>(
+                  child: Consumer<RoleProvider>(
                     builder: (context, prov, child) {
                       return ListView.builder(
                         itemCount: prov.menus.length,
@@ -62,7 +63,7 @@ class AddRoleScreen extends StatelessWidget {
                               trailing: Checkbox(
                                 activeColor: Colors.green,
                                 checkColor: Colors.white,
-                                value: prov.permission[index] != '0'
+                                value: prov.permission![index] != '0'
                                     ? true
                                     : false,
                                 onChanged: (newValue) {
@@ -83,7 +84,7 @@ class AddRoleScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  userProv.title != 'Add Role'
+                  roleProv.title != 'Add Role'
                       ? TextButton(
                           onPressed: () {
                             showDialog(
@@ -104,11 +105,7 @@ class AddRoleScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        if (userProv.cNamaRole.text !=
-                                            'ADMINISTRATOR') {
-                                          userProv.deleteRole();
-                                          Navigator.of(context).pop(true);
-                                        }
+                                        Navigator.of(context).pop(true);
                                       },
                                       child: const Text('Ya'),
                                     ),
@@ -121,7 +118,7 @@ class AddRoleScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content: Text(userProv.message)));
+                                          content: Text(roleProv.message!)));
                                 }
                               },
                             );
@@ -136,29 +133,33 @@ class AddRoleScreen extends StatelessWidget {
                         ),
                   ElevatedButton(
                     onPressed: () {
-                      if (userProv.title != 'Add Role') {
-                        userProv.udpateRole().then(
-                          (value) {
-                            if (userProv.message.contains('Berhasil')) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
-                            }
-                          },
-                        );
+                      if (roleProv.title != 'Add Role') {
+                        // roleProv.udpateRole().then(
+                        //   (value) {
+                        //     if (roleProv.message!.contains('Berhasil')) {
+                        //       Navigator.pop(context);
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //           SnackBar(content: Text(roleProv.message!)));
+                        //     } else {
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //           SnackBar(content: Text(roleProv.message!)));
+                        //     }
+                        //   },
+                        // );
                       } else {
-                        userProv.insertRole().then(
+                        roleProv
+                            .insertRole(Role(
+                                nama: roleProv.cNama.text.toUpperCase(),
+                                permission: roleProv.permission!.join()))
+                            .then(
                           (value) {
-                            if (userProv.message.contains('Berhasil')) {
+                            if (roleProv.message!.contains('berhasil')) {
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
+                                  SnackBar(content: Text(roleProv.message!)));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
+                                  SnackBar(content: Text(roleProv.message!)));
                             }
                           },
                         );

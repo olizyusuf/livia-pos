@@ -4,45 +4,120 @@ import 'package:liviapos/model/role.dart';
 
 class RoleProvider extends ChangeNotifier {
   final String _tableRole = 'Roles';
+  String _title = '';
 
   int? _id;
   String? _nama;
-  String? _permission;
-  List? _roles;
+  List? _permission;
+  final List _roles = [];
   String? _message;
 
+  // menu list for permission
+  List<String> menus = [
+    "Penjualan",
+    "Pembelian",
+    "Master",
+    "Laporan",
+    "Users",
+    "Printer",
+    "Database",
+    "Setting"
+  ];
+
+  String get title => _title;
   int? get id => _id;
   String? get nama => _nama;
-  String? get permission => _permission;
-  List? get roles => _roles;
+  List? get permission => _permission;
+  List get roles => _roles;
   String? get message => _message;
 
+  //textfield controller
+  TextEditingController cNama = TextEditingController();
+
   final DatabaseHelper _helperDb = DatabaseHelper();
+
+  void initAddForm() {
+    _title = 'Add Role';
+    _nama = '';
+    cNama.clear();
+    _permission = ['0', '0', '0', '0', '0', '0', '0', '0'];
+    _message = '';
+  }
+
+  void initEditForm(String nama) {
+    _title = 'Edit Role';
+    getRoleByNama(nama);
+  }
 
   Future<void> getRoles() async {
     try {
       final db = await _helperDb.database;
 
-      //query
-      String query = 'SELECT * FROM $_tableRole';
-      final data = await db.rawQuery(query);
-
+      final data = await db.query(_tableRole);
+      _roles.clear();
       for (var d in data) {
-        _roles?.add(
-          Role(
-            id: int.parse(d['id'].toString()),
-            nama: d['nama'].toString(),
-            permission: d['permission'].toString(),
-          ),
-        );
+        _roles.add(d);
       }
 
-      debugPrint('cek list roles: ${_roles?.length}');
+      debugPrint(_roles.length.toString());
+      notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
       _message = 'data gagal dimuat, ada kesalah..';
     }
+  }
 
+  Future<void> getRoleByNama(String val) async {
+    try {
+      final db = await _helperDb.database;
+
+      //query
+      final data = await db.query(
+        _tableRole,
+        where: 'nama = ?',
+        whereArgs: [val],
+      );
+
+      if (data.isNotEmpty) {
+        final dataByNama = Role.fromMap(data.first);
+        _id = dataByNama.id;
+        _nama = dataByNama.nama;
+        _permission = dataByNama.permission.split('');
+      }
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'data gagal dimuat, ada kesalah..';
+    }
+  }
+
+  Future<void> insertRole(Role role) async {
+    if (role.nama.isEmpty || role.permission.isEmpty) {
+      _message = 'Nama atau Permission mohon di isi..';
+      return;
+    }
+    try {
+      final db = await _helperDb.database;
+
+      //query
+      await db.insert(_tableRole, role.toMap());
+
+      _message = 'Data berhasil disimpan..';
+      getRoles();
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'data gagal disimpan, ada kesalah..';
+    }
+    notifyListeners();
+  }
+
+  void changePermission(int index, bool value) {
+    if (value) {
+      _permission?[index] = '1';
+    } else {
+      _permission?[index] = '0';
+    }
     notifyListeners();
   }
 }

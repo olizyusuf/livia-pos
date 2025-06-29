@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
-import 'package:liviapos/screen/add_role_screen.dart';
+import 'package:liviapos/screen/role_form_screen.dart';
 import 'package:liviapos/screen/add_user_screen.dart';
 import 'package:liviapos/screen/main_screen.dart';
 import 'package:liviapos/screen/role_screen.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => RoleProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Livia Pos',
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
           '/users': (context) => const UserScreen(),
           '/add_user': (context) => const AddUserScreen(),
           '/roles': (context) => const RoleScreen(),
-          '/add_role': (context) => const AddRoleScreen(),
+          '/form_role': (context) => const RoleFormScreen(),
         },
       ),
     );
