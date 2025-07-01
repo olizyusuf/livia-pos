@@ -122,18 +122,18 @@ class UserFormScreen extends StatelessWidget {
                     //   },
                     // );
                   } else {
-                    // userProv.insertUser().then(
-                    //   (value) {
-                    //     if (userProv.message.contains('Berhasil')) {
-                    //       Navigator.pop(context);
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //           SnackBar(content: Text(userProv.message)));
-                    //     } else {
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //           SnackBar(content: Text(userProv.message)));
-                    //     }
-                    //   },
-                    // );
+                    userProv.insertUser().then(
+                      (value) {
+                        if (userProv.message.contains('berhasil')) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        }
+                      },
+                    );
                   }
                 },
                 child: const Text(

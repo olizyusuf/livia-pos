@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
   String? _role;
   String? _title;
   final List _users = [];
-  String? _message;
+  String _message = '';
 
   int? get id => _id;
   String? get username => _username;
@@ -20,7 +20,7 @@ class UserProvider extends ChangeNotifier {
   String? get role => _role;
   String? get title => _title;
   List get users => _users;
-  String? get message => _message;
+  String get message => _message;
 
   // TEXTFIELD CONTROLLER
   TextEditingController cUsername = TextEditingController();
@@ -40,11 +40,13 @@ class UserProvider extends ChangeNotifier {
     cRePassword.clear();
     _role = 'ADMINISTRATOR';
     cRole.text = _role.toString();
+    _message = '';
   }
 
   void initEditForm(String username) {
     _title = 'Edit User';
     getUserByUsername(username);
+    _message = '';
   }
 
   Future<void> getUsers() async {
@@ -84,5 +86,43 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> insertUser() async {
+    try {
+      if (cUsername.text.isEmpty ||
+          cPassword.text.isEmpty ||
+          cRePassword.text.isEmpty) {
+        _message = 'Username, password, repassword masih ada yang kosong...';
+
+        return;
+      }
+      if (cPassword.text != cRePassword.text) {
+        _message = 'Password tidak sama...';
+        return;
+      }
+
+      if (cUsername.text.length < 8 || cPassword.text.length < 8) {
+        _message = 'Username dan password minimal 8 karakter...';
+        return;
+      }
+
+      final db = await _helperDb.database;
+
+      // query
+      await db.insert(
+          _tableUser,
+          User(
+                  username: cUsername.text.toUpperCase(),
+                  password: cPassword.text,
+                  role: _role!)
+              .toMap());
+
+      _message = '$_username berhasil disimpan..';
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'Error, telah terjadi kesalahan.. coba kembali..';
+    }
+    notifyListeners();
   }
 }
