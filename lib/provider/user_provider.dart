@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:liviapos/model/user.dart';
 
@@ -21,6 +24,10 @@ class UserProvider extends ChangeNotifier {
   String? get title => _title;
   List get users => _users;
   String get message => _message;
+
+  set setRole(String val) {
+    _role = val;
+  }
 
   // TEXTFIELD CONTROLLER
   TextEditingController cUsername = TextEditingController();
@@ -46,7 +53,25 @@ class UserProvider extends ChangeNotifier {
   void initEditForm(String username) {
     _title = 'Edit User';
     getUserByUsername(username);
+    cPassword.clear();
+    cRePassword.clear();
     _message = '';
+  }
+
+  // SECURITY FOR HASH PASSWORD
+  String _generateSalt([int length = 32]) {
+    final random = Random.secure();
+    final saltBytes =
+        List<int>.generate(length, (index) => random.nextInt(256));
+    return base64.encode(saltBytes);
+  }
+
+  String _hashPassword(String password, String salt) {
+    final saltBytes = base64.decode(salt);
+    final key = utf8.encode(password);
+    final hmacSha256 = Hmac(sha256, saltBytes);
+    final digest = hmacSha256.convert(key);
+    return digest.toString();
   }
 
   Future<void> getUsers() async {
@@ -74,18 +99,17 @@ class UserProvider extends ChangeNotifier {
       );
       if (data.isNotEmpty) {
         final dataByUsername = User.fromMap(data.first);
+        debugPrint(dataByUsername.toString());
         _id = dataByUsername.id;
         _username = dataByUsername.username;
-        _password = dataByUsername.password;
         _role = dataByUsername.role;
+        cUsername.text = dataByUsername.username;
+        cRole.text = dataByUsername.role;
       }
-
-      cUsername.text = _username.toString();
-      cPassword.text = _password.toString();
-      cRePassword.text = _password.toString();
     } catch (e) {
       debugPrint(e.toString());
     }
+    notifyListeners();
   }
 
   Future<void> insertUser() async {
@@ -109,16 +133,21 @@ class UserProvider extends ChangeNotifier {
 
       final db = await _helperDb.database;
 
+      // enkripsi password
+      final salt = _generateSalt();
+      final hashedPassword = _hashPassword(cPassword.text, salt);
+
       // query
       await db.insert(
           _tableUser,
           User(
                   username: cUsername.text.toUpperCase(),
-                  password: cPassword.text,
+                  password: hashedPassword,
                   role: _role!)
               .toMap());
 
       _message = '$_username berhasil disimpan..';
+      getUsers();
     } catch (e) {
       debugPrint(e.toString());
       _message = 'Error, telah terjadi kesalahan.. coba kembali..';

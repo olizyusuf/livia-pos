@@ -98,7 +98,9 @@ class UserFormScreen extends StatelessWidget {
                     }).toList(),
                     onChanged: (String? valrole) {
                       userProv.cRole.text = valrole!;
+                      userProv.setRole = valrole;
                       debugPrint(userProv.cRole.text);
+                      debugPrint('role ${userProv.role}');
                     },
                   );
                 },
