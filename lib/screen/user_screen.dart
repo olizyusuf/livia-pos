@@ -24,7 +24,7 @@ class UserScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Container(
+      body: SizedBox(
         height: displayHelper.heightDp(context),
         width: displayHelper.widthDp(context),
         child: Column(
