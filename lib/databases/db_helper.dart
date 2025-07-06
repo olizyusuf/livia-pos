@@ -1,3 +1,4 @@
+import 'package:liviapos/helper/password_util.dart';
 import 'package:liviapos/model/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -60,7 +61,7 @@ class DatabaseHelper {
       {
         'id': 1,
         'username': 'ADMIN',
-        'password': '11111111',
+        'password': PasswordUtil.hashPassword('11111111'),
         'role': 'ADMINISTRATOR'
       },
     );

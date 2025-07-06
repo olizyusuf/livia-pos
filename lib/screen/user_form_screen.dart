@@ -111,18 +111,18 @@ class UserFormScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   if (userProv.title != 'Add User') {
-                    // userProv.updateUser().then(
-                    //   (value) {
-                    //     if (userProv.message.contains('Berhasil')) {
-                    //       Navigator.pop(context);
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //           SnackBar(content: Text(userProv.message)));
-                    //     } else {
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //           SnackBar(content: Text(userProv.message)));
-                    //     }
-                    //   },
-                    // );
+                    userProv.updateUser().then(
+                      (value) {
+                        if (userProv.message.contains('berhasil')) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(userProv.message)));
+                        }
+                      },
+                    );
                   } else {
                     userProv.insertUser().then(
                       (value) {
@@ -163,10 +163,10 @@ class UserFormScreen extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // if (userProv.cUsername.text != 'ADMIN') {
-                                    //   userProv.deleteUser();
-                                    //   Navigator.of(context).pop(true);
-                                    // }
+                                    if (userProv.cUsername.text != 'ADMIN') {
+                                      userProv.deleteUser();
+                                      Navigator.of(context).pop(true);
+                                    }
                                   },
                                   child: const Text('Ya'),
                                 ),
@@ -175,11 +175,11 @@ class UserFormScreen extends StatelessWidget {
                           },
                         ).then(
                           (value) {
-                            // if (value) {
-                            //   Navigator.pop(context);
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //       SnackBar(content: Text(userProv.message)));
-                            // }
+                            if (value) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(userProv.message)));
+                            }
                           },
                         );
                       },

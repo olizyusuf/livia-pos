@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:liviapos/helper/password_util.dart';
 import 'package:liviapos/model/user.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../databases/db_helper.dart';
 
@@ -58,22 +57,6 @@ class UserProvider extends ChangeNotifier {
     _message = '';
   }
 
-  // SECURITY FOR HASH PASSWORD
-  String _generateSalt([int length = 32]) {
-    final random = Random.secure();
-    final saltBytes =
-        List<int>.generate(length, (index) => random.nextInt(256));
-    return base64.encode(saltBytes);
-  }
-
-  String _hashPassword(String password, String salt) {
-    final saltBytes = base64.decode(salt);
-    final key = utf8.encode(password);
-    final hmacSha256 = Hmac(sha256, saltBytes);
-    final digest = hmacSha256.convert(key);
-    return digest.toString();
-  }
-
   Future<void> getUsers() async {
     try {
       final db = await _helperDb.database;
@@ -82,7 +65,7 @@ class UserProvider extends ChangeNotifier {
       for (var d in data) {
         _users.add(d);
       }
-      debugPrint(users.length.toString());
+      // debugPrint(users.length.toString());
       notifyListeners();
     } catch (e) {
       debugPrint(e.toString());
@@ -99,7 +82,7 @@ class UserProvider extends ChangeNotifier {
       );
       if (data.isNotEmpty) {
         final dataByUsername = User.fromMap(data.first);
-        debugPrint(dataByUsername.toString());
+
         _id = dataByUsername.id;
         _username = dataByUsername.username;
         _role = dataByUsername.role;
@@ -126,32 +109,119 @@ class UserProvider extends ChangeNotifier {
         return;
       }
 
-      if (cUsername.text.length < 8 || cPassword.text.length < 8) {
-        _message = 'Username dan password minimal 8 karakter...';
+      if (cUsername.text.length < 4 || cPassword.text.length < 8) {
+        _message =
+            'Username minimal 4 karakter dan password minimal 8 karakter...';
         return;
       }
 
+      //enkrip password
+      final hashPassword = PasswordUtil.hashPassword(cPassword.text);
+
       final db = await _helperDb.database;
-
-      // enkripsi password
-      final salt = _generateSalt();
-      final hashedPassword = _hashPassword(cPassword.text, salt);
-
       // query
       await db.insert(
           _tableUser,
           User(
                   username: cUsername.text.toUpperCase(),
-                  password: hashedPassword,
+                  password: hashPassword,
                   role: _role!)
               .toMap());
 
-      _message = '$_username berhasil disimpan..';
+      _message = '${cUsername.text.toUpperCase()} berhasil disimpan..';
+      getUsers();
+    } on DatabaseException catch (e) {
+      if (e.isUniqueConstraintError()) {
+        _message = 'Username sudah tersedia...';
+      } else {
+        debugPrint(e.toString());
+        _message = 'Error, telah terjadi kesalahan.. coba kembali..';
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateUser() async {
+    try {
+      if (cPassword.text.isEmpty && cRePassword.text.isEmpty) {
+        final db = await _helperDb.database;
+
+        //query
+        await db.rawUpdate('UPDATE $_tableUser SET role = ? WHERE username = ?',
+            [_role, cUsername.text.toUpperCase()]);
+
+        _message =
+            '${cUsername.text.toUpperCase()} role berhasil diperbaharui..';
+        getUsers();
+        return;
+      }
+
+      if (cPassword.text.length < 8 || cPassword.text != cRePassword.text) {
+        _message = 'Password minimal 8 karakter atau Repassword tidak sama...';
+        return;
+      }
+
+      if (cPassword.text.isNotEmpty || cRePassword.text.isNotEmpty) {
+        //enkrip password
+        final hashPassword = PasswordUtil.hashPassword(cPassword.text);
+
+        final db = await _helperDb.database;
+
+        //query
+        await db.rawUpdate(
+            'UPDATE $_tableUser SET password = ? , role = ? WHERE username = ?',
+            [hashPassword, _role, cUsername.text.toUpperCase()]);
+
+        _message = 'Password berhasil diperbaharui..';
+        getUsers();
+        return;
+      }
+    } on DatabaseException catch (e) {
+      debugPrint(e.toString());
+      _message = 'Error, telah terjadi kesalahan.. coba kembali..';
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      final db = await _helperDb.database;
+      _message = '${cUsername.text.toUpperCase()} berhasil dihapus...';
+      await db
+          .delete(_tableUser, where: 'username = ?', whereArgs: [_username]);
       getUsers();
     } catch (e) {
       debugPrint(e.toString());
       _message = 'Error, telah terjadi kesalahan.. coba kembali..';
     }
     notifyListeners();
+  }
+
+  Future<void> cekLogin() async {
+    try {
+      final db = await _helperDb.database;
+      final data = await db.query(
+        _tableUser,
+        where: 'username = ?',
+        whereArgs: ['JONI'],
+      );
+
+      if (data.isNotEmpty) {
+        final dataByUsername = User.fromMap(data.first);
+        debugPrint(dataByUsername.toString());
+
+        debugPrint(dataByUsername.password);
+
+        if (PasswordUtil.verifyPassword('12345678', dataByUsername.password)) {
+          debugPrint('password benar');
+        } else {
+          debugPrint('password salah');
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'Error, telah terjadi kesalahan.. coba kembali..';
+    }
   }
 }
