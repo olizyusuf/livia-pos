@@ -143,7 +143,9 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> updateUser() async {
     try {
-      if (cPassword.text.isEmpty && cRePassword.text.isEmpty) {
+      if (cPassword.text.isEmpty &&
+          cRePassword.text.isEmpty &&
+          (cUsername.text != 'ADMIN')) {
         final db = await _helperDb.database;
 
         //query
