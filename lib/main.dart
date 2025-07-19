@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
+import 'package:liviapos/screen/login_screen.dart';
 import 'package:liviapos/screen/role_form_screen.dart';
 import 'package:liviapos/screen/user_form_screen.dart';
 import 'package:liviapos/screen/main_screen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
           useMaterial3: true,
         ),
-        home: const MainScreen(),
+        home: const LoginScreen(),
         routes: {
           '/main': (context) => const MainScreen(),
           '/users': (context) => const UserScreen(),

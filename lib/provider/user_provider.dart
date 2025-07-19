@@ -15,6 +15,7 @@ class UserProvider extends ChangeNotifier {
   String? _title;
   final List _users = [];
   String _message = '';
+  bool _obsecure = true;
 
   int? get id => _id;
   String? get username => _username;
@@ -23,6 +24,7 @@ class UserProvider extends ChangeNotifier {
   String? get title => _title;
   List get users => _users;
   String get message => _message;
+  bool get obsecure => _obsecure;
 
   set setRole(String val) {
     _role = val;
@@ -206,7 +208,7 @@ class UserProvider extends ChangeNotifier {
       final data = await db.query(
         _tableUser,
         where: 'username = ?',
-        whereArgs: ['JONI'],
+        whereArgs: [cUsername.text.toUpperCase()],
       );
 
       if (data.isNotEmpty) {
@@ -215,15 +217,33 @@ class UserProvider extends ChangeNotifier {
 
         debugPrint(dataByUsername.password);
 
-        if (PasswordUtil.verifyPassword('12345678', dataByUsername.password)) {
-          debugPrint('password benar');
+        if (PasswordUtil.verifyPassword(
+            cPassword.text, dataByUsername.password)) {
+          _message = "Loading.... Login berhasil";
         } else {
-          debugPrint('password salah');
+          _message = "Password masih salah";
+          cPassword.clear();
         }
+      } else {
+        _message = "Username salah";
+        cUsername.clear();
+        cPassword.clear();
       }
     } catch (e) {
       debugPrint(e.toString());
       _message = 'Error, telah terjadi kesalahan.. coba kembali..';
     }
+    notifyListeners();
+  }
+
+  void changeVisiblePassword() {
+    if (_obsecure) {
+      _obsecure = false;
+      debugPrint(_obsecure.toString());
+    } else {
+      _obsecure = true;
+      debugPrint(_obsecure.toString());
+    }
+    notifyListeners();
   }
 }
