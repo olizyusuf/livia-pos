@@ -9,7 +9,7 @@ Point of Sales offline database using Sqlite on Android Devices.
 
 This project will progress and update step by step in weekly update in sunday.
 
-- [ ] User Management
+- [x] User Management
 - [ ] Master Data
 - [ ] Pembelian
 - [ ] Penjualan
