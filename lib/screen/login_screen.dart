@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/helper/alertdialog_helper.dart';
 import 'package:liviapos/helper/display_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -72,6 +73,8 @@ class LoginScreen extends StatelessWidget {
                   userProv.cekLogin().then((value) {
                     if (userProv.message.contains('salah')) {
                       debugPrint(userProv.message);
+                      AlertdialogHelper.showSimpleAlertDialog(context,
+                          title: 'Peringatan!', message: userProv.message);
                     }
                     if (userProv.message.contains('berhasil')) {
                       debugPrint(userProv.message);
