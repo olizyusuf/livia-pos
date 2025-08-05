@@ -70,16 +70,19 @@ class LoginScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  userProv.cekLogin().then((value) {
-                    if (userProv.message.contains('salah')) {
-                      debugPrint(userProv.message);
-                      AlertdialogHelper.showSimpleAlertDialog(context,
-                          title: 'Peringatan!', message: userProv.message);
-                    }
-                    if (userProv.message.contains('berhasil')) {
-                      debugPrint(userProv.message);
-                    }
-                  });
+                  userProv.cekLogin().then(
+                    (value) {
+                      if (userProv.message.contains('salah')) {
+                        debugPrint(userProv.message);
+                        AlertdialogHelper.showSimpleAlertDialog(context,
+                            title: 'Peringatan!', message: userProv.message);
+                      }
+                      if (userProv.message.contains('berhasil')) {
+                        debugPrint(userProv.message);
+                        Navigator.pushReplacementNamed(context, '/main');
+                      }
+                    },
+                  );
                 },
                 child: const Text('Login'),
               ),
