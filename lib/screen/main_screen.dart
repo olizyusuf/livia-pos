@@ -127,7 +127,7 @@ class MainScreen extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/main');
+                Navigator.pushReplacementNamed(context, '/login');
               },
             ),
           ],
