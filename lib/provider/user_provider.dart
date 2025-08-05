@@ -220,6 +220,8 @@ class UserProvider extends ChangeNotifier {
         if (PasswordUtil.verifyPassword(
             cPassword.text, dataByUsername.password)) {
           _message = "Loading.... Login berhasil";
+          cUsername.clear();
+          cPassword.clear();
         } else {
           _message = "Password masih salah";
           cPassword.clear();
