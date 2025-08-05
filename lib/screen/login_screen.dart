@@ -14,6 +14,8 @@ class LoginScreen extends StatelessWidget {
 
     UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
 
+    userProv.setObsecure = true;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -78,8 +80,10 @@ class LoginScreen extends StatelessWidget {
                             title: 'Peringatan!', message: userProv.message);
                       }
                       if (userProv.message.contains('berhasil')) {
-                        debugPrint(userProv.message);
-                        Navigator.pushReplacementNamed(context, '/main');
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/main',
+                        );
                       }
                     },
                   );

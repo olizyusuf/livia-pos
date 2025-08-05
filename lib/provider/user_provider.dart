@@ -30,6 +30,10 @@ class UserProvider extends ChangeNotifier {
     _role = val;
   }
 
+  set setObsecure(bool val) {
+    _obsecure = val;
+  }
+
   // TEXTFIELD CONTROLLER
   TextEditingController cUsername = TextEditingController();
   TextEditingController cPassword = TextEditingController();
@@ -111,9 +115,9 @@ class UserProvider extends ChangeNotifier {
         return;
       }
 
-      if (cUsername.text.length < 4 || cPassword.text.length < 8) {
+      if (cUsername.text.length < 4 || cPassword.text.length < 6) {
         _message =
-            'Username minimal 4 karakter dan password minimal 8 karakter...';
+            'Username minimal 4 karakter dan password minimal 6 karakter...';
         return;
       }
 
@@ -132,6 +136,8 @@ class UserProvider extends ChangeNotifier {
 
       _message = '${cUsername.text.toUpperCase()} berhasil disimpan..';
       getUsers();
+      cUsername.clear();
+      cPassword.clear();
     } on DatabaseException catch (e) {
       if (e.isUniqueConstraintError()) {
         _message = 'Username sudah tersedia...';
@@ -160,8 +166,8 @@ class UserProvider extends ChangeNotifier {
         return;
       }
 
-      if (cPassword.text.length < 8 || cPassword.text != cRePassword.text) {
-        _message = 'Password minimal 8 karakter atau Repassword tidak sama...';
+      if (cPassword.text.length < 6 || cPassword.text != cRePassword.text) {
+        _message = 'Password minimal 6 karakter atau Repassword tidak sama...';
         return;
       }
 
@@ -178,6 +184,8 @@ class UserProvider extends ChangeNotifier {
 
         _message = 'Password berhasil diperbaharui..';
         getUsers();
+        cUsername.clear();
+        cPassword.clear();
         return;
       }
     } on DatabaseException catch (e) {
