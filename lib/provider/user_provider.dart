@@ -16,6 +16,7 @@ class UserProvider extends ChangeNotifier {
   final List _users = [];
   String _message = '';
   bool _obsecure = true;
+  List<User> _currentUser = [];
 
   int? get id => _id;
   String? get username => _username;
@@ -25,6 +26,7 @@ class UserProvider extends ChangeNotifier {
   List get users => _users;
   String get message => _message;
   bool get obsecure => _obsecure;
+  List get currentUser => _currentUser;
 
   set setRole(String val) {
     _role = val;
@@ -242,6 +244,30 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint(e.toString());
       _message = 'Error, telah terjadi kesalahan.. coba kembali..';
+    }
+    notifyListeners();
+  }
+
+  Future<void> getCurrentUser() async {
+    try {
+      final db = await _helperDb.database;
+      final data = await db.query(
+        _tableUser,
+        where: 'username = ?',
+        whereArgs: [cUsername.text.toUpperCase()],
+      );
+      if (data.isNotEmpty) {
+        final dataByUsername = User.fromMap(data.first);
+
+        _currentUser.add(
+          User(
+              username: dataByUsername.username,
+              password: dataByUsername.password,
+              role: dataByUsername.role),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
     notifyListeners();
   }

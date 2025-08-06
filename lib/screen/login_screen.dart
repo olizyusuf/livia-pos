@@ -72,6 +72,8 @@ class LoginScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
+                  userProv.currentUser.clear();
+                  userProv.getCurrentUser();
                   userProv.cekLogin().then(
                     (value) {
                       if (userProv.message.contains('salah')) {

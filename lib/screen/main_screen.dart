@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../helper/display_helper.dart';
 
@@ -10,6 +12,17 @@ class MainScreen extends StatelessWidget {
     String titleApp = "Livia POS";
 
     DisplayHelper displayHelper = DisplayHelper();
+
+    UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+
+    String userTitle = userProv.currentUser.isNotEmpty
+        ? userProv.currentUser[0].username
+        : 'null';
+
+    String roleTitle =
+        userProv.currentUser.isNotEmpty ? userProv.currentUser[0].role : 'null';
+
+    debugPrint(userProv.currentUser.toString());
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +48,7 @@ class MainScreen extends StatelessWidget {
       drawer: Drawer(
         child: ListView(
           children: [
-            const SizedBox(
+            SizedBox(
               height: 90,
               child: DrawerHeader(
                   decoration: BoxDecoration(color: Colors.grey),
@@ -43,12 +56,12 @@ class MainScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Admin',
+                        userTitle,
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Administrator',
+                        roleTitle,
                         style: TextStyle(fontSize: 14.0),
                       ),
                     ],
