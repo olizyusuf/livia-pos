@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Livia POS'),
+        title: const Text('LIVIA POS'),
       ),
       body: SingleChildScrollView(
         child: Container(
