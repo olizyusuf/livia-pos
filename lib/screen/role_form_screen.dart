@@ -118,10 +118,12 @@ class RoleFormScreen extends StatelessWidget {
                             ).then(
                               (value) {
                                 if (value) {
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(roleProv.message!)));
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(roleProv.message!)));
+                                  }
                                 }
                               },
                             );
@@ -139,13 +141,16 @@ class RoleFormScreen extends StatelessWidget {
                       if (roleProv.title != 'Add Role') {
                         roleProv.updateRole().then(
                           (value) {
-                            if (roleProv.message!.contains('berhasil')) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(roleProv.message!)));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(roleProv.message!)));
+                            if (context.mounted) {
+                              if (roleProv.message!.contains('berhasil')) {
+                                if (context.mounted) {}
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(roleProv.message!)));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(roleProv.message!)));
+                              }
                             }
                           },
                         );
@@ -156,13 +161,15 @@ class RoleFormScreen extends StatelessWidget {
                                 permission: roleProv.permission!.join()))
                             .then(
                           (value) {
-                            if (roleProv.message!.contains('berhasil')) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(roleProv.message!)));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(roleProv.message!)));
+                            if (context.mounted) {
+                              if (roleProv.message!.contains('berhasil')) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(roleProv.message!)));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(roleProv.message!)));
+                              }
                             }
                           },
                         );

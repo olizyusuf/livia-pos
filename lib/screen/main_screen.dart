@@ -38,7 +38,7 @@ class MainScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: displayHelper.heightDp(context),
         width: displayHelper.widthDp(context),
         child: Center(

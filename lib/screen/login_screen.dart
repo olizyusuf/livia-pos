@@ -76,16 +76,18 @@ class LoginScreen extends StatelessWidget {
                   userProv.getCurrentUser();
                   userProv.cekLogin().then(
                     (value) {
-                      if (userProv.message.contains('salah')) {
-                        debugPrint(userProv.message);
-                        AlertdialogHelper.showSimpleAlertDialog(context,
-                            title: 'Peringatan!', message: userProv.message);
-                      }
-                      if (userProv.message.contains('berhasil')) {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          '/main',
-                        );
+                      if (context.mounted) {
+                        if (userProv.message.contains('salah')) {
+                          debugPrint(userProv.message);
+                          AlertdialogHelper.showSimpleAlertDialog(context,
+                              title: 'Peringatan!', message: userProv.message);
+                        }
+                        if (userProv.message.contains('berhasil')) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/main',
+                          );
+                        }
                       }
                     },
                   );

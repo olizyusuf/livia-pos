@@ -82,7 +82,7 @@ class UserFormScreen extends StatelessWidget {
               Consumer<RoleProvider>(
                 builder: (context, prov, child) {
                   return DropdownButtonFormField<String>(
-                    value: userProv.role,
+                    initialValue: userProv.role,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       hintStyle: const TextStyle(color: Colors.black26),
@@ -113,26 +113,30 @@ class UserFormScreen extends StatelessWidget {
                   if (userProv.title != 'Add User') {
                     userProv.updateUser().then(
                       (value) {
-                        if (userProv.message.contains('berhasil')) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
+                        if (context.mounted) {
+                          if (userProv.message.contains('berhasil')) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(userProv.message)));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(userProv.message)));
+                          }
                         }
                       },
                     );
                   } else {
                     userProv.insertUser().then(
                       (value) {
-                        if (userProv.message.contains('berhasil')) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(userProv.message)));
+                        if (context.mounted) {
+                          if (userProv.message.contains('berhasil')) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(userProv.message)));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(userProv.message)));
+                          }
                         }
                       },
                     );
@@ -175,10 +179,12 @@ class UserFormScreen extends StatelessWidget {
                           },
                         ).then(
                           (value) {
-                            if (value) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProv.message)));
+                            if (context.mounted) {
+                              if (value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(userProv.message)));
+                              }
                             }
                           },
                         );

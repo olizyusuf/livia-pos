@@ -16,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   final List _users = [];
   String _message = '';
   bool _obsecure = true;
-  List<User> _currentUser = [];
+  final List<User> _currentUser = [];
 
   int? get id => _id;
   String? get username => _username;
