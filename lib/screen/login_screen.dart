@@ -33,66 +33,85 @@ class LoginScreen extends StatelessWidget {
                 "Login",
                 style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: userProv.cUsername,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    hintText: 'example',
-                    hintStyle: TextStyle(color: Colors.black26),
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),
-              Consumer<UserProvider>(
-                builder: (context, prov, child) {
-                  return SizedBox(
-                    width: 300,
-                    child: TextField(
-                      controller: userProv.cPassword,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.remove_red_eye_outlined),
-                          onPressed: () {
-                            prov.changeVisiblePassword();
-                          },
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border.all(
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                        controller: userProv.cUsername,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          hintText: 'example',
+                          hintStyle: TextStyle(color: Colors.black26),
                         ),
                       ),
-                      obscureText: prov.obsecure,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  userProv.currentUser.clear();
-                  userProv.getCurrentUser();
-                  userProv.cekLogin().then(
-                    (value) {
-                      if (context.mounted) {
-                        if (userProv.message.contains('salah')) {
-                          debugPrint(userProv.message);
-                          AlertdialogHelper.showSimpleAlertDialog(context,
-                              title: 'Peringatan!', message: userProv.message);
-                        }
-                        if (userProv.message.contains('berhasil')) {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            '/main',
-                          );
-                        }
-                      }
-                    },
-                  );
-                },
-                child: const Text('Login'),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Consumer<UserProvider>(
+                      builder: (context, prov, child) {
+                        return SizedBox(
+                          width: 300,
+                          child: TextField(
+                            controller: userProv.cPassword,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.remove_red_eye_outlined),
+                                onPressed: () {
+                                  prov.changeVisiblePassword();
+                                },
+                              ),
+                            ),
+                            obscureText: prov.obsecure,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        userProv.currentUser.clear();
+                        userProv.getCurrentUser();
+                        userProv.cekLogin().then(
+                          (value) {
+                            if (context.mounted) {
+                              if (userProv.message.contains('salah')) {
+                                debugPrint(userProv.message);
+                                AlertdialogHelper.showSimpleAlertDialog(context,
+                                    title: 'Peringatan!',
+                                    message: userProv.message);
+                              }
+                              if (userProv.message.contains('berhasil')) {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/main',
+                                );
+                              }
+                            }
+                          },
+                        );
+                      },
+                      child: const Text('Login'),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 30,

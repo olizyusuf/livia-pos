@@ -44,6 +44,15 @@ class UserProvider extends ChangeNotifier {
 
   final DatabaseHelper _helperDb = DatabaseHelper();
 
+  @override
+  void dispose() {
+    cUsername.dispose();
+    cPassword.dispose();
+    cRePassword.dispose();
+    cRole.dispose();
+    super.dispose();
+  }
+
   void initAddForm() {
     _title = 'Add User';
     _id = 0;

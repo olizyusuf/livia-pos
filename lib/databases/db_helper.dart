@@ -60,7 +60,7 @@ class DatabaseHelper {
       {
         'id': 1,
         'username': 'ADMIN',
-        'password': PasswordUtil.hashPassword('11111111'),
+        'password': PasswordUtil.hashPassword('123456'),
         'role': 'ADMINISTRATOR'
       },
     );
