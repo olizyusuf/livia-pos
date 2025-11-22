@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class MainScreen extends StatelessWidget {
     DisplayHelper displayHelper = DisplayHelper();
 
     UserProvider userProv = Provider.of<UserProvider>(context, listen: false);
+    RoleProvider roleProv = Provider.of<RoleProvider>(context, listen: false);
 
     String userTitle = userProv.currentUser.isNotEmpty
         ? userProv.currentUser[0].username
@@ -22,7 +24,11 @@ class MainScreen extends StatelessWidget {
     String roleTitle =
         userProv.currentUser.isNotEmpty ? userProv.currentUser[0].role : 'null';
 
-    debugPrint(userProv.currentUser.toString());
+    // get role from Username
+    String roleName = userProv.currentUser[0].role.toString();
+
+    // get menu permission
+    roleProv.getPermission(roleName);
 
     return Scaffold(
       appBar: AppBar(
@@ -75,6 +81,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[0] != '0' ? true : false,
               leading: const Icon(Icons.shopping_cart),
               title: const Text("Penjualan"),
               onTap: () {
@@ -82,6 +89,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[1] != '0' ? true : false,
               leading: const Icon(Icons.input_outlined),
               title: const Text("Pembelian"),
               onTap: () {
@@ -89,6 +97,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[2] != '0' ? true : false,
               leading: const Icon(Icons.dashboard_outlined),
               title: const Text("Master"),
               onTap: () {
@@ -99,6 +108,7 @@ class MainScreen extends StatelessWidget {
               color: Colors.black45,
             ),
             ListTile(
+              enabled: roleProv.menu?[3] != '0' ? true : false,
               leading: const Icon(Icons.data_thresholding_outlined),
               title: const Text("Laporan"),
               onTap: () {
@@ -109,6 +119,7 @@ class MainScreen extends StatelessWidget {
               color: Colors.black45,
             ),
             ListTile(
+              enabled: roleProv.menu?[4] != '0' ? true : false,
               leading: const Icon(Icons.person_3_outlined),
               title: const Text("Users"),
               onTap: () {
@@ -116,6 +127,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[5] != '0' ? true : false,
               leading: const Icon(Icons.print_rounded),
               title: const Text("Printer"),
               onTap: () {
@@ -123,6 +135,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[6] != '0' ? true : false,
               leading: const Icon(Icons.save),
               title: const Text("Database"),
               onTap: () {
@@ -130,6 +143,7 @@ class MainScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              enabled: roleProv.menu?[7] != '0' ? true : false,
               leading: const Icon(Icons.settings_applications_outlined),
               title: const Text("Setting"),
               onTap: () {

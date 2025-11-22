@@ -25,9 +25,9 @@ class LoginScreen extends StatelessWidget {
         child: Container(
           width: display.widthDp(context),
           height: display.heightDp(context),
-          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          padding: const EdgeInsets.fromLTRB(10, 70, 10, 5),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text(
                 "Login",
@@ -54,7 +54,6 @@ class LoginScreen extends StatelessWidget {
                         controller: userProv.cUsername,
                         decoration: const InputDecoration(
                           labelText: 'Username',
-                          hintText: 'example',
                           hintStyle: TextStyle(color: Colors.black26),
                         ),
                       ),

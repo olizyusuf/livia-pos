@@ -11,6 +11,7 @@ class RoleProvider extends ChangeNotifier {
   List? _permission;
   final List _roles = [];
   String? _message;
+  List? _menu;
 
   // menu list for permission
   List<String> menus = [
@@ -30,6 +31,7 @@ class RoleProvider extends ChangeNotifier {
   List? get permission => _permission;
   List get roles => _roles;
   String? get message => _message;
+  List? get menu => _menu;
 
   // TEXTFIELD CONTROLLER
   TextEditingController cNama = TextEditingController();
@@ -161,5 +163,27 @@ class RoleProvider extends ChangeNotifier {
       _permission?[index] = '0';
     }
     notifyListeners();
+  }
+
+  Future<void> getPermission(String name) async {
+    try {
+      final db = await _helperDb.database;
+
+      //query
+      final data = await db.query(
+        _tableRole,
+        where: 'nama = ?',
+        whereArgs: [name],
+      );
+
+      if (data.isNotEmpty) {
+        final dataByNama = Role.fromMap(data.first);
+        _menu = dataByNama.permission.split('');
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+      _message = 'data gagal dimuat, ada kesalah..';
+    }
   }
 }
