@@ -15,6 +15,7 @@ class DatabaseHelper {
 
   static const rolesTable = 'roles';
   static const usersTable = 'users';
+  static const mastersTable = 'masters';
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -64,5 +65,20 @@ class DatabaseHelper {
         'role': 'ADMINISTRATOR'
       },
     );
+
+    // table masters
+    await db.execute('''
+      CREATE TABLE $mastersTable(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      kode_produk TEXT UNIQUE NOT NULL,
+      barcode TEXT UNIQUE NOT NULL,
+      nama TEXT NOT NULL,
+      qty REAL DEFAULT 0,
+      h_beli REAL NOT NULL,
+      h_jual REAL NOT NULL,
+      satuan TEXT NOT NULL,
+      kategori TEXT NOT NULL
+    );  
+    ''');
   }
 }
