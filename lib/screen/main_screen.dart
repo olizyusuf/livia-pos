@@ -101,7 +101,8 @@ class MainScreen extends StatelessWidget {
               leading: const Icon(Icons.dashboard_outlined),
               title: const Text("Master"),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/main');
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/masters');
               },
             ),
             const Divider(
@@ -123,6 +124,7 @@ class MainScreen extends StatelessWidget {
               leading: const Icon(Icons.person_3_outlined),
               title: const Text("Users"),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/users');
               },
             ),
