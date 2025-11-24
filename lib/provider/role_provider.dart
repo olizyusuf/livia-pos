@@ -3,9 +3,11 @@ import 'package:liviapos/databases/db_helper.dart';
 import 'package:liviapos/model/role.dart';
 
 class RoleProvider extends ChangeNotifier {
+  // variable tabel dan title
   final String _tableRole = 'Roles';
   String _title = '';
 
+  // variable
   int? _id;
   String? _nama;
   List? _permission;
@@ -25,6 +27,7 @@ class RoleProvider extends ChangeNotifier {
     "Setting"
   ];
 
+  // getter untuk variable private
   String get title => _title;
   int? get id => _id;
   String? get nama => _nama;
@@ -33,11 +36,20 @@ class RoleProvider extends ChangeNotifier {
   String? get message => _message;
   List? get menu => _menu;
 
-  // TEXTFIELD CONTROLLER
+  // Controller Textfield
   TextEditingController cNama = TextEditingController();
 
+  // inisialisasi database helper
   final DatabaseHelper _helperDb = DatabaseHelper();
 
+  // dispose widget
+  @override
+  void dispose() {
+    cNama.dispose();
+    super.dispose();
+  }
+
+  // init untuk form tambah role
   void initAddForm() {
     _title = 'Add Role';
     _nama = '';
@@ -46,11 +58,13 @@ class RoleProvider extends ChangeNotifier {
     _message = '';
   }
 
+  // init untuk edit role
   void initEditForm(String nama) {
     _title = 'Edit Role';
     getRoleByNama(nama);
   }
 
+  // fungsi mendapat semua data role didalam tabel 'Roles'
   Future<void> getRoles() async {
     try {
       final db = await _helperDb.database;
@@ -69,6 +83,7 @@ class RoleProvider extends ChangeNotifier {
     }
   }
 
+  // fungsi mendapat satu data role dengan nama
   Future<void> getRoleByNama(String val) async {
     try {
       final db = await _helperDb.database;
@@ -96,6 +111,7 @@ class RoleProvider extends ChangeNotifier {
     }
   }
 
+  // fungsi menambah data role ke table 'Roles'
   Future<void> insertRole(Role role) async {
     if (role.nama.isEmpty || role.permission.isEmpty) {
       _message = 'Nama atau Permission mohon di isi..';
@@ -116,6 +132,7 @@ class RoleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // fungsi update satu data role di dalam tabel 'Roles'
   Future<void> updateRole() async {
     if (_nama!.isEmpty || permission!.isEmpty) {
       _message = 'Nama atau Permission mohon di isi..';
@@ -143,6 +160,7 @@ class RoleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // fungsi menghapus satu data role di dalam tabel 'Roles'
   Future<void> deleteRole() async {
     try {
       final db = await _helperDb.database;
@@ -156,6 +174,7 @@ class RoleProvider extends ChangeNotifier {
     }
   }
 
+  // fungsi mengganti pada data list Permission
   void changePermission(int index, bool value) {
     if (value) {
       _permission?[index] = '1';
@@ -165,6 +184,7 @@ class RoleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // fungsi mendapatkan permission disalah satu data role
   Future<void> getPermission(String name) async {
     try {
       final db = await _helperDb.database;

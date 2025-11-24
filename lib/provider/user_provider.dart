@@ -6,8 +6,10 @@ import 'package:sqflite/sqflite.dart';
 import '../databases/db_helper.dart';
 
 class UserProvider extends ChangeNotifier {
+  // nama table
   final String _tableUser = 'users';
 
+  // variabel
   int? _id;
   String? _username;
   String? _password;
@@ -28,10 +30,12 @@ class UserProvider extends ChangeNotifier {
   bool get obsecure => _obsecure;
   List get currentUser => _currentUser;
 
+  // set role pada checklist
   set setRole(String val) {
     _role = val;
   }
 
+  // set obsecure password
   set setObsecure(bool val) {
     _obsecure = val;
   }
@@ -42,6 +46,7 @@ class UserProvider extends ChangeNotifier {
   TextEditingController cRePassword = TextEditingController();
   TextEditingController cRole = TextEditingController();
 
+  // database helper
   final DatabaseHelper _helperDb = DatabaseHelper();
 
   @override
@@ -53,6 +58,7 @@ class UserProvider extends ChangeNotifier {
     super.dispose();
   }
 
+  // inisiasi form tambah user
   void initAddForm() {
     _title = 'Add User';
     _id = 0;
@@ -66,6 +72,7 @@ class UserProvider extends ChangeNotifier {
     _message = '';
   }
 
+  // inisiasi form edit user
   void initEditForm(String username) {
     _title = 'Edit User';
     getUserByUsername(username);
@@ -74,6 +81,7 @@ class UserProvider extends ChangeNotifier {
     _message = '';
   }
 
+  // mengambil semua data user dari tabel users
   Future<void> getUsers() async {
     try {
       final db = await _helperDb.database;
@@ -89,6 +97,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  // mengambil data user berdasarkan username
   Future<void> getUserByUsername(String val) async {
     try {
       final db = await _helperDb.database;
@@ -112,8 +121,10 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // menambah data user
   Future<void> insertUser() async {
     try {
+      // cek texfield username,password, dan repassword tidak boleh kosong
       if (cUsername.text.isEmpty ||
           cPassword.text.isEmpty ||
           cRePassword.text.isEmpty) {
@@ -121,18 +132,20 @@ class UserProvider extends ChangeNotifier {
 
         return;
       }
+      // cek textfield password dan repassword tidak sama
       if (cPassword.text != cRePassword.text) {
         _message = 'Password tidak sama...';
         return;
       }
 
+      // cek minimum karakter 4 pada username, karakter 6 password
       if (cUsername.text.length < 4 || cPassword.text.length < 6) {
         _message =
             'Username minimal 4 karakter dan password minimal 6 karakter...';
         return;
       }
 
-      //enkrip password
+      //enkripsi password
       final hashPassword = PasswordUtil.hashPassword(cPassword.text);
 
       final db = await _helperDb.database;
@@ -147,8 +160,6 @@ class UserProvider extends ChangeNotifier {
 
       _message = '${cUsername.text.toUpperCase()} berhasil disimpan..';
       getUsers();
-      cUsername.clear();
-      cPassword.clear();
     } on DatabaseException catch (e) {
       if (e.isUniqueConstraintError()) {
         _message = 'Username sudah tersedia...';
@@ -157,9 +168,13 @@ class UserProvider extends ChangeNotifier {
         _message = 'Error, telah terjadi kesalahan.. coba kembali..';
       }
     }
+    cUsername.clear();
+    cPassword.clear();
+    cRePassword.clear();
     notifyListeners();
   }
 
+  // memperbaharui data user
   Future<void> updateUser() async {
     try {
       if (cPassword.text.isEmpty &&
@@ -195,18 +210,19 @@ class UserProvider extends ChangeNotifier {
 
         _message = 'Password berhasil diperbaharui..';
         getUsers();
-        cUsername.clear();
-        cPassword.clear();
         return;
       }
     } on DatabaseException catch (e) {
       debugPrint(e.toString());
       _message = 'Error, telah terjadi kesalahan.. coba kembali..';
     }
-
+    cUsername.clear();
+    cPassword.clear();
+    cRePassword.clear();
     notifyListeners();
   }
 
+  // hapus data user
   Future<void> deleteUser() async {
     try {
       final db = await _helperDb.database;
@@ -221,6 +237,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // verifikasi cek login
   Future<void> cekLogin() async {
     try {
       final db = await _helperDb.database;
@@ -257,6 +274,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // mengambil data user yang login
   Future<void> getCurrentUser() async {
     try {
       final db = await _helperDb.database;
@@ -281,6 +299,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //fungsi mengubah visibilitas password pada textfield login
   void changeVisiblePassword() {
     if (_obsecure) {
       _obsecure = false;
