@@ -16,6 +16,7 @@ class DatabaseHelper {
   static const rolesTable = 'roles';
   static const usersTable = 'users';
   static const mastersTable = 'masters';
+  static const kategoriTable = 'kategori';
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -71,14 +72,22 @@ class DatabaseHelper {
       CREATE TABLE $mastersTable(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       kode_produk TEXT UNIQUE NOT NULL,
-      barcode TEXT UNIQUE NOT NULL,
+      barcode TEXT UNIQUE,
       nama TEXT NOT NULL,
       qty REAL DEFAULT 0,
-      h_beli REAL NOT NULL,
-      h_jual REAL NOT NULL,
-      satuan TEXT NOT NULL,
+      harga_beli REAL DEFAULT 0,
+      harga_jual REAL DEFAULT 0,
+      satuan TEXT,
       kategori TEXT NOT NULL
     );  
+    ''');
+
+    // table kategori
+    await db.execute('''
+      CREATE TABLE $kategoriTable(
+      id INTEGER PRIMARY KEY,
+      nama_kategori TEXT NOT NULL
+    );
     ''');
   }
 }
