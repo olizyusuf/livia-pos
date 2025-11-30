@@ -51,7 +51,6 @@ class UserFormScreen extends StatelessWidget {
               ),
               TextField(
                 controller: userProv.cPassword,
-                obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Password',
@@ -60,13 +59,13 @@ class UserFormScreen extends StatelessWidget {
                   filled: true,
                   labelText: 'Password',
                 ),
+                obscureText: true,
               ),
               const SizedBox(
                 height: 15.0,
               ),
               TextField(
                 controller: userProv.cRePassword,
-                obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Re-Password',
@@ -75,6 +74,7 @@ class UserFormScreen extends StatelessWidget {
                   filled: true,
                   labelText: 'Re-Password',
                 ),
+                obscureText: true,
               ),
               const SizedBox(
                 height: 15.0,

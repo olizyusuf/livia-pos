@@ -1,4 +1,4 @@
-class Master {
+class Produk {
   int? id;
   String? kodeProduk;
   String? barcode;
@@ -9,7 +9,7 @@ class Master {
   String? satuan;
   String? kategori;
 
-  Master(
+  Produk(
       {this.id,
       required this.kodeProduk,
       required this.barcode,
@@ -34,8 +34,8 @@ class Master {
     };
   }
 
-  factory Master.fromMap(Map<String, dynamic> map) {
-    return Master(
+  factory Produk.fromMap(Map<String, dynamic> map) {
+    return Produk(
         id: map['id'],
         kodeProduk: map['kode_produk'],
         barcode: map['barocde'],

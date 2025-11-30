@@ -4,6 +4,7 @@ import 'package:liviapos/provider/role_provider.dart';
 import 'package:liviapos/provider/user_provider.dart';
 import 'package:liviapos/screen/login_screen.dart';
 import 'package:liviapos/screen/master_screen.dart';
+import 'package:liviapos/screen/produk_screen.dart';
 import 'package:liviapos/screen/role_form_screen.dart';
 import 'package:liviapos/screen/user_form_screen.dart';
 import 'package:liviapos/screen/main_screen.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           '/roles': (context) => const RoleScreen(),
           '/form_role': (context) => const RoleFormScreen(),
           '/masters': (context) => const MasterScreen(),
+          '/produk': (context) => const ProdukScreen(),
         },
       ),
     );

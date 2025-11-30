@@ -15,7 +15,7 @@ class DatabaseHelper {
 
   static const rolesTable = 'roles';
   static const usersTable = 'users';
-  static const mastersTable = 'masters';
+  static const produkTable = 'produk';
   static const kategoriTable = 'kategori';
 
   Future<Database> get database async {
@@ -69,7 +69,7 @@ class DatabaseHelper {
 
     // table masters
     await db.execute('''
-      CREATE TABLE $mastersTable(
+      CREATE TABLE $produkTable(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       kode_produk TEXT UNIQUE NOT NULL,
       barcode TEXT UNIQUE,
