@@ -86,7 +86,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE $kategoriTable(
       id INTEGER PRIMARY KEY,
-      nama_kategori TEXT NOT NULL
+      nama_kategori TEXT UNIQUE NOT NULL
     );
     ''');
   }
